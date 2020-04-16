@@ -1,5 +1,13 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Starta frontend:en 
+1. Se till att npm är installerat på din dator.
+2. Gå in i mappen till repot med din kommandotolk.
+3. Kör `npm install` (detta görs en gång)
+4. Kör `npm start`(detta görs varje gång). 
+5. Sådär! Hemsidan ligger nu på http://localhost:3000/
+
+
 ## React Bindings för Onsen UI
 
 Använd ES6 imports för att specificera vilka moduler du vill använda i paketet react-onsenui: 
