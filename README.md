@@ -62,13 +62,13 @@ eller
 hur man sätter upp google maps react api: https://www.npmjs.com/package/@react-google-maps/api
 TL;DR:
 
-Installera @react-google-maps/api med NPM:
+Installera @react-google-maps/api med NPM: (görs en gång)
 
-npm i -S @react-google-maps/api
 
+`npm i -S @react-google-maps/api` 
 eller med Yarn:
 
-yarn add @react-google-maps/api
+`yarn add @react-google-maps/api`
 
 #### Dokumentation Google Maps React API
 https://react-google-maps-api-docs.netlify.app/
