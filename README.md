@@ -57,3 +57,18 @@ eller
 
 `style(button): styled primary buttons`
 
+
+#### Google Maps React API
+hur man sätter upp google maps react api: https://www.npmjs.com/package/@react-google-maps/api
+TL;DR:
+
+Installera @react-google-maps/api med NPM:
+
+npm i -S @react-google-maps/api
+
+eller med Yarn:
+
+yarn add @react-google-maps/api
+
+## Dokumentation
+https://react-google-maps-api-docs.netlify.app/
