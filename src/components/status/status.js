@@ -4,9 +4,14 @@ import { Page, Button, Tabbar, Tab } from "react-onsenui"; // Only import the ne
 
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
+import StatusView from "../status/statusView";
 
 function Status() {
-  return <Page>Status page</Page>;
+  return (
+    <Page>
+      <StatusView />
+    </Page>
+  );
 }
 
 export default Status;

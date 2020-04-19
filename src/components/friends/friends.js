@@ -4,17 +4,12 @@ import { Page, List, Button, Tabbar, Tab } from "react-onsenui"; // Only import 
 
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
+import FriendsView from "../friends/friendsView";
 
 function Friends() {
   return (
     <Page>
-      <List>
-        <ons-list-item tappable>Albin</ons-list-item>
-        <ons-list-item tappable>Kristina</ons-list-item>
-        <ons-list-item tappable>Billy</ons-list-item>
-        <ons-list-item tappable>Hilda</ons-list-item>
-        <ons-list-item tappable>Anna</ons-list-item>
-      </List>
+      <FriendsView />
     </Page>
   );
 }

@@ -12,12 +12,12 @@ import Login from "../src/components/login/login";
 
 function App() {
   const [index, setIndex] = useState(0);
-  const [isLogedIn, setIsLogedin] = useState(false);
+  const [logedIn, setLogedin] = useState(true);
 
   return (
     <div className="App">
       <Page>
-        {isLogedIn ? (
+        {logedIn ? (
           <Tabbar
             position="bottom"
             index={index}

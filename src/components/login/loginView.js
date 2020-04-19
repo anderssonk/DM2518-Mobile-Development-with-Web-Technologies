@@ -4,14 +4,9 @@ import { Page } from "react-onsenui"; // Only import the necessary components
 
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
-import MapView from "../map/mapView";
 
-function Map() {
-  return (
-    <Page>
-      <MapView />
-    </Page>
-  );
+function LoginView() {
+  return <Page>This will eventually be the login view</Page>;
 }
 
-export default Map;
+export default LoginView;
