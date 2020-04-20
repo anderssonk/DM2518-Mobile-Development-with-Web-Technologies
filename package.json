@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-google-maps/api": "^1.8.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "onsenui": "^2.10.10",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-google-maps": "9.4.5",
     "react-onsenui": "^1.11.2",
     "react-scripts": "3.4.1"
   },

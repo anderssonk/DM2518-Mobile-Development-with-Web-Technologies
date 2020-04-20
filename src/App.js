@@ -4,19 +4,20 @@ import { Page, Button } from "react-onsenui"; // Only import the necessary compo
 import "./App.css";
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
-
+import Map from "./map/map";
 const handleClick = () => {
-	alert("Henlo World!");
+  alert("Henlo World!");
 };
 
 function App() {
-	return (
-		<div className="App">
-			<Page>
-				<Button onClick={handleClick}>Tap me!</Button>
-			</Page>
-		</div>
-	);
+  return (
+    <div className="App">
+      {/* <Page>
+        <Button onClick={handleClick}>Tap me!</Button>
+      </Page> */}
+      <Map />
+    </div>
+  );
 }
 
 export default App;
