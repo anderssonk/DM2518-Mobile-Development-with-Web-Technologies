@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -9,41 +9,31 @@ import {
 const Map = () => {
   //locations
   var kth_location = { lat: 59.347008, lng: 18.072181 };
-  // var hem_location = { lat: 59.312061, lng: 18.07448 };
   var center_location = { lat: 59.314044, lng: 18.071609 };
 
-  const [selectedLocation, setSelectedLocation] = useState(null); //used for InfoWindow
+  const [yourLocation, setYourLocation] = useState(); //used for setting your local position
+  console.log("yourLocation:", yourLocation);
 
-  const [markerPosition, setMarkerPosition] = useState(); //the markers position
+  const [selectedLocation, setSelectedLocation] = useState(null); //used for displaying info for InfoWindow
+
+  const [markerPosition, setMarkerPosition] = useState(); //the markers position, is set when user drags or clicks the map when addingMarker is true.
+  console.log("markerPosition:", markerPosition);
 
   const [addingMarker, setAddingMarker] = useState(false); //boolean, is true when marker is in progress of being added, otherwise false.
   console.log("addingMarker:", addingMarker);
 
-  // const markerAnimation = () => {
-  //   console.log(markerPosition);
-  //   if (!markerPosition && addingMarker) {
-  //     return 2;
-  //   } else if (markerPosition && addingMarker) {
-  //     return 1;
-  //   } else {
-  //     return null;
-  //   }
-  // };
-
   function yourPosition() {
+    //sends your position to addPosition function that sets it as hook state
     if (navigator.geolocation) {
-      console.log(
-        navigator.geolocation.getCurrentPosition(
-          (position) => addPosition(position),
-          showError
-        )
+      navigator.geolocation.getCurrentPosition(
+        (position) => addPosition(position),
+        showError
       );
     } else {
       console.log("Geolocation is not supported by this browser.");
-      return center_location;
     }
 
-    //Error handling for getLocation function
+    //Error handling for yourPosition function
     function showError(error) {
       switch (error.code) {
         case error.PERMISSION_DENIED:
@@ -67,18 +57,19 @@ const Map = () => {
   }
 
   const addPosition = (position) => {
-    //position: object with position data,
-    console.log("addPosition:", position);
+    //position: object with position data from yourPosition() function callback.
     var newCoordinates = {};
 
     newCoordinates = {
       lat: position.coords.latitude,
       lng: position.coords.longitude,
     };
-    // return newCoordinates;
+    console.log("addPosition:", newCoordinates);
+    setYourLocation(newCoordinates);
   };
 
   const updateMarkerLocation = (ev) => {
+    //updates markerPosition with event triggered from click on <GoogleMap>.
     const location = ev.latLng;
     const newCoordinates = {
       lat: location.lat(),
@@ -96,11 +87,12 @@ const Map = () => {
         <GoogleMap
           id="googleMap"
           mapContainerStyle={{
+            //map needs to have a width and a height to display anything
             height: "90vh",
             width: "100wh",
           }}
           zoom={14}
-          center={markerPosition ? center_location : center_location}
+          center={markerPosition ? center_location : center_location} //TODO needs to fix getCenter() function
           onClick={(ev) => {
             if (addingMarker) {
               console.log("onClick Map Event: addingMarker");
@@ -110,23 +102,26 @@ const Map = () => {
           }}
         >
           {/* Generates markers from markerPosition */}
-          {markerPosition && (
+          {(markerPosition || yourLocation) && (
             <Marker
-              position={{ lat: markerPosition.lat, lng: markerPosition.lng }}
+              position={markerPosition ? markerPosition : yourLocation} //sets marker position as yourLocation if no marker has been set on the map already.
               onClick={() => {
+                //triggered when click on marker, used for
                 setSelectedLocation({
                   lat: markerPosition.lat,
                   lng: markerPosition.lng,
                 });
               }}
               onDragEnd={(ev) => {
+                //updateMarkerLocation when marker has been dragged.
                 console.log("marker Drag End");
 
                 updateMarkerLocation(ev);
               }}
               draggable={addingMarker ? true : false}
-              animation={addingMarker ? 1 : 2}
+              animation={addingMarker ? 1 : 2} //1 = BOUNCE, 2=DROP
               icon={
+                //changes icon if marker is being added or not.
                 addingMarker
                   ? {
                       url:
@@ -136,7 +131,7 @@ const Map = () => {
               }
             />
           )}
-          {selectedLocation && (
+          {selectedLocation && ( //to update info on marker
             <InfoWindow
               position={{
                 lat: selectedLocation.lat,
@@ -152,12 +147,15 @@ const Map = () => {
         </GoogleMap>
       </LoadScript>
       <div>
-        <input id="bar" type="text" placeholder="What bar?.." />
-
-        <button onClick={() => setAddingMarker(!addingMarker)}>
+        <button
+          onClick={() => {
+            setAddingMarker(!addingMarker); //sets addingMarker to opposite boolean when clicked, also runs yourPosition() which sets yourLocation
+            yourPosition();
+          }}
+        >
           {addingMarker ? "Confirm location" : "Add Bar Location"}
         </button>
-        {/* <button onClick={console.log("gmap:", gmap.current)}>adddd</button> */}
+        {/* <button onClick={yourPosition}>adddd</button> */}
       </div>
     </div>
   );
