@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Page, Button, Tabbar, Tab } from "react-onsenui"; // Only import the necessary components
 // import * as Ons from 'react-onsenui'; // Import everything and use it as 'Ons.Page', 'Ons.Button'
 import "./App.css";
+// ONSEN
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 
+// COMPONENTS
 import Friends from "../src/components/friends/friends";
 import Status from "../src/components/status/status";
 import Map from "../src/components/map/map";
