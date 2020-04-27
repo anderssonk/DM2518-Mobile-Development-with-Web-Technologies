@@ -52,6 +52,7 @@ const GoogleMaps = () => {
 					console.log("An unknown error occurred.");
 					// x.innerHTML = "An unknown error occurred."
 					break;
+				default: //do nothing
 			}
 		}
 	}
