@@ -6,10 +6,10 @@ import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 import StatusView from "../status/statusView";
 
-function Status() {
+function Status({ user }) {
   return (
     <Page>
-      <StatusView />
+      <StatusView user={user} />
     </Page>
   );
 }

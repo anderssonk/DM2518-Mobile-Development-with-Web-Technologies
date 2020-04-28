@@ -6,10 +6,10 @@ import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 import FriendsView from "../friends/friendsView";
 
-function Friends() {
+function Friends({ user }) {
   return (
     <Page>
-      <FriendsView />
+      <FriendsView user={user} />
     </Page>
   );
 }

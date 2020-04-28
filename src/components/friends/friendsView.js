@@ -5,9 +5,10 @@ import { Page, List } from "react-onsenui"; // Only import the necessary compone
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 
-function FriendsView() {
+function FriendsView({ user }) {
   return (
     <Page>
+      <div>Logged in as {user.displayName}</div>
       <List>
         <ons-list-item tappable>Albin</ons-list-item>
         <ons-list-item tappable>Kristina</ons-list-item>

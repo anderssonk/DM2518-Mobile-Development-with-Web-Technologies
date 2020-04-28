@@ -4,28 +4,12 @@ import { Page, Input } from "react-onsenui"; // Only import the necessary compon
 
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
-import LoginView from "../login/loginView";
 
-function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function Login({ login }) {
   return (
     <Page>
-      <div> Login or create account</div>
-      <Input
-        value={username}
-        float
-        onChange={(e) => setUsername(e.target.value)}
-        modifier="transparent"
-        placeholder="username"
-      />
-      <Input
-        value={password}
-        float
-        onChange={(e) => setPassword(e.target.value)}
-        modifier="transparent"
-        placeholder="password"
-      />
+      <div>You have to log in to use this application</div>
+      <button onClick={login}>Login</button>
     </Page>
   );
 }

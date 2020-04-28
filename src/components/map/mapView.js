@@ -5,8 +5,13 @@ import { Page, Button, Tabbar, Tab } from "react-onsenui"; // Only import the ne
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 
-function MapView() {
-  return <Page>Map Page</Page>;
+function MapView({ user }) {
+  return (
+    <Page>
+      <div>Logged in as {user.displayName}</div>
+      <div>MapView</div>
+    </Page>
+  );
 }
 
 export default MapView;

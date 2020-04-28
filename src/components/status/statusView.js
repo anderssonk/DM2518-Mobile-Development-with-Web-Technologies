@@ -5,8 +5,12 @@ import { Page } from "react-onsenui"; // Only import the necessary components
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 
-function StatusView() {
-  return <Page>Status page</Page>;
+function StatusView({ user }) {
+  return (
+    <Page>
+      <div>Logged in as {user.displayName}</div>Status page
+    </Page>
+  );
 }
 
 export default StatusView;
