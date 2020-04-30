@@ -11,6 +11,15 @@ const Map = () => {
   var kth_location = { lat: 59.347008, lng: 18.072181 };
   var center_location = { lat: 59.314044, lng: 18.071609 };
 
+  const [mapRef, setMapRef] = useState(null); //to save a reference to the map
+  const [center, setCenter] = useState(center_location); //to save center of map
+
+  const loadHandler = (map) => {
+    console.log("map", map);
+    // Store a reference to the google map instance in state
+    setMapRef(map);
+  };
+
   const [yourLocation, setYourLocation] = useState(); //used for setting your local position
   console.log("yourLocation:", yourLocation);
 
@@ -77,6 +86,7 @@ const Map = () => {
     };
     setMarkerPosition(newCoordinates);
   };
+  console.log("mapref:", mapRef);
 
   return (
     <div>
@@ -91,8 +101,9 @@ const Map = () => {
             height: "90vh",
             width: "100wh",
           }}
+          onLoad={loadHandler}
           zoom={14}
-          center={markerPosition ? center_location : center_location} //TODO needs to fix getCenter() function
+          center={mapRef ? mapRef.getCenter() : kth_location} //TODO needs to fix getCenter() function
           onClick={(ev) => {
             if (addingMarker) {
               console.log("onClick Map Event: addingMarker");
@@ -162,3 +173,5 @@ const Map = () => {
 };
 
 export default Map;
+
+//          {/* onCenterChanged={() => setCenter(mapRef.getCenter())} */}
