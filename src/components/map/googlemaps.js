@@ -101,7 +101,7 @@ const GoogleMaps = () => {
             width: "100wh",
           }}
           zoom={14}
-          center={mapRef ? center_location : mapRef.getCenter()} //TODO needs to fix getCenter() function
+          center={mapRef ? mapRef.getCenter() : center_location} //TODO needs to fix getCenter() function
           onClick={(ev) => {
             if (addingMarker) {
               console.log("onClick Map Event: addingMarker");
