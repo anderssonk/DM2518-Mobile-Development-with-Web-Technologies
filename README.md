@@ -66,9 +66,6 @@ Installera @react-google-maps/api med NPM: (görs en gång)
 
 
 `npm i -S @react-google-maps/api` 
-eller med Yarn:
-
-`yarn add @react-google-maps/api`
 
 #### Dokumentation Google Maps React API
 https://react-google-maps-api-docs.netlify.app/
