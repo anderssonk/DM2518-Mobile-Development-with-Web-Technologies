@@ -5,19 +5,22 @@ import "./App.css";
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 
+import withFirebaseAuth from "react-with-firebase-auth";
+import * as firebaseSetup from "./firebase.setup";
+
 import Friends from "../src/components/friends/friends";
 import Status from "../src/components/status/status";
 import Map from "../src/components/map/map";
 import Login from "../src/components/login/login";
 
-function App() {
+function App({ signInWithGoogle, signOut, user }) {
   const [index, setIndex] = useState(0);
   const [logedIn, setLogedin] = useState(true);
 
   return (
     <div className="App">
       <Page>
-        {logedIn ? (
+        {user ? (
           <Tabbar
             position="bottom"
             index={index}
@@ -44,6 +47,7 @@ function App() {
                     title="Friends"
                     active={activeIndex === 0}
                     tabbar={tabbar}
+                    user={user}
                   />
                 ),
                 tab: <Tab label="Friends" icon="md-flare" />,
@@ -51,11 +55,16 @@ function App() {
             ]}
           />
         ) : (
-          <Login />
+          <Login login={signInWithGoogle} />
         )}
       </Page>
     </div>
   );
 }
 
-export default App;
+//export default App;
+
+export default withFirebaseAuth({
+  providers: firebaseSetup.providers,
+  firebaseAppAuth: firebaseSetup.firebaseAppAuth,
+})(App);
