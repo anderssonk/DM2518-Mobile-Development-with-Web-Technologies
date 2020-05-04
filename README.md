@@ -27,6 +27,28 @@ import 'onsenui/css/onsen-css-components.css';
 
 **OBS** CSS:en behöver endast importeras en gång, och detta är gjort i app.js.
 Läs mer om hur man använder React Bindings för Onsen UI [här](https://onsen.io/v2/guide/react/)
+För att begränsa css-filer till att endast de filer som importerar dem har tillgång till dem skriv [namn].modules.css
+
+
+## Starta firebase
+1) Gå in på https://console.firebase.google.com/u/0/ och välj vår applikation.
+2) Tryck på kugghjulet bredvid "project overview" och välj "project settings". 
+3) Scrolla ned till rubriken "Firebase SDK snippet"
+4) Välj kodstycket under "Config" (se under) och kopiera koden till en ny fil: src/firebase.config.js  
+   
+      const firebaseConfig = {
+        apiKey: "XXXXXXX",
+        authDomain: "XXXXXXX",
+        databaseURL: "XXXXXXX",
+        projectId: "XXXXXXX",
+        storageBucket: "XXXXXXX",
+        messagingSenderId: "XXXXXXX",
+        appId: "XXXXXXX"
+      };
+      
+      export default firebaseConfig
+
+5) Skriv "npm install firebase" i konsolen. 
 
 
 ## Commit Messages
