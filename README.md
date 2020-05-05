@@ -49,6 +49,7 @@ För att begränsa css-filer till att endast de filer som importerar dem har til
       export default firebaseConfig
 
 5) Skriv "npm install firebase" i konsolen. 
+6) Skriv "npm install firebase-tools" i konsolen. 
 
 
 ## Commit Messages
