@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -10,8 +10,9 @@ const GoogleMaps = () => {
   const [mapRef, setMapRef] = useState(null); //to save a reference to the map
 
   const loadHandler = (map) => {
-    // Store a reference to the google map instance in state
+    console.log("map", map);
     setMapRef(map);
+    console.log("mapRef", mapRef);
   };
 
   //locations
@@ -27,7 +28,7 @@ const GoogleMaps = () => {
   console.log("markerPosition:", markerPosition);
 
   const [addingMarker, setAddingMarker] = useState(false); //boolean, is true when marker is in progress of being added, otherwise false.
-  console.log("addingMarker:", addingMarker);
+  // console.log("addingMarker:", addingMarker);
 
   function yourPosition() {
     //sends your position to addPosition function that sets it as hook state
@@ -87,7 +88,7 @@ const GoogleMaps = () => {
   };
 
   return (
-    <div>
+    <Fragment>
       <LoadScript
         id="script-loader"
         googleMapsApiKey="AIzaSyC2yBzA3XpDwN9ZRcpwxGwcFfw1xH0SGxQ"
@@ -101,7 +102,7 @@ const GoogleMaps = () => {
             width: "100wh",
           }}
           zoom={14}
-          center={mapRef ? mapRef.getCenter() : center_location} //TODO needs to fix getCenter() function
+          center={mapRef ? mapRef.getCenter() : yourLocation} //TODO needs to fix getCenter() function
           onClick={(ev) => {
             if (addingMarker) {
               console.log("onClick Map Event: addingMarker");
@@ -155,7 +156,7 @@ const GoogleMaps = () => {
           )}
         </GoogleMap>
       </LoadScript>
-      <div>
+      <Fragment>
         <button
           onClick={() => {
             setAddingMarker(!addingMarker); //sets addingMarker to opposite boolean when clicked, also runs yourPosition() which sets yourLocation
@@ -165,8 +166,8 @@ const GoogleMaps = () => {
           {addingMarker ? "Confirm location" : "Add Bar Location"}
         </button>
         {/* <button onClick={yourPosition}>adddd</button> */}
-      </div>
-    </div>
+      </Fragment>
+    </Fragment>
   );
 };
 

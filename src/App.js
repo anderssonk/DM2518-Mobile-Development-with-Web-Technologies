@@ -10,7 +10,8 @@ import * as firebaseSetup from "./firebase.setup";
 
 import Friends from "../src/components/friends/friends";
 import Status from "../src/components/status/status";
-import Map from "../src/components/map/map";
+import Map from "./components/map/map";
+import GMap from "./components/map/googlemaps2";
 import Login from "../src/components/login/login";
 
 function App({ signInWithGoogle, signOut, user }) {
@@ -27,7 +28,9 @@ function App({ signInWithGoogle, signOut, user }) {
             renderTabs={(activeIndex, tabbar) => [
               {
                 content: (
-                  <Map title="Map" active={activeIndex === 0} tabbar={tabbar} />
+                  <Page title="Map" active={activeIndex === 0} tabbar={tabbar}>
+                    <GMap />
+                  </Page>
                 ),
                 tab: <Tab label="Map" icon="md-map" />,
               },
