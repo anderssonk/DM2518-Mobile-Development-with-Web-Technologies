@@ -37,6 +37,9 @@ function App({ signInWithGoogle, signOut, user }) {
                     title="Status"
                     active={activeIndex === 1}
                     tabbar={tabbar}
+                    logout={signOut}
+                    firebaseSetup={firebaseSetup}
+                    user = {user}
                   />
                 ),
                 tab: <Tab label="Status" icon="md-local-bar" />,
@@ -48,6 +51,7 @@ function App({ signInWithGoogle, signOut, user }) {
                     active={activeIndex === 0}
                     tabbar={tabbar}
                     user={user}
+                    firebaseSetup={firebaseSetup}
                   />
                 ),
                 tab: <Tab label="Friends" icon="md-flare" />,
@@ -55,16 +59,17 @@ function App({ signInWithGoogle, signOut, user }) {
             ]}
           />
         ) : (
-          <Login login={signInWithGoogle} />
-        )}
+          <Login login={signInWithGoogle} firebaseSetup={firebaseSetup} user={user} />
+        ) }
       </Page>
     </div>
   );
 }
 
-//export default App;
+// export default App;
 
 export default withFirebaseAuth({
   providers: firebaseSetup.providers,
   firebaseAppAuth: firebaseSetup.firebaseAppAuth,
+  db: firebaseSetup.db
 })(App);

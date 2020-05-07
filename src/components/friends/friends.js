@@ -6,10 +6,11 @@ import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 import FriendsView from "../friends/friendsView";
 
-function Friends({ user }) {
+function Friends({ user, firebaseSetup }) {
+
   return (
     <Page>
-      <FriendsView user={user} />
+      <FriendsView user={user} firebaseSetup={firebaseSetup} />
     </Page>
   );
 }

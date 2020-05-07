@@ -74,6 +74,7 @@ const GoogleMaps = () => {
     };
     console.log("addPosition:", newCoordinates);
     setYourLocation(newCoordinates);
+    //lägg till i firestore -H
   };
 
   const updateMarkerLocation = (ev) => {

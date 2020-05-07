@@ -6,13 +6,13 @@ import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 import LoginView from "../login/loginView";
 
-function Login({ login }) {
+function Login({ login, user, firebaseSetup}) {
+
+
   return (
     <Page>
-      <div>You have to be logged in to use this application</div>
-      <div>
-        <button onClick={login}>Login</button>
-      </div>
+      <LoginView login={login} user={user} firebaseSetup={firebaseSetup} />
+
     </Page>
   );
 }

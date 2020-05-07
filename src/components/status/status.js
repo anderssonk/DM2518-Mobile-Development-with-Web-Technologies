@@ -6,10 +6,10 @@ import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 import StatusView from "../status/statusView";
 
-function Status() {
+function Status({logout, user, firebaseSetup}) {
   return (
     <Page>
-      <StatusView />
+      <StatusView logout={logout} user={user} firebaseSetup={firebaseSetup}/>
     </Page>
   );
 }
