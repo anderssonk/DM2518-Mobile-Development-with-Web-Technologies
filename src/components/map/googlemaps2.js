@@ -6,8 +6,9 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import customStyle from "./customStyles";
+import * as firebaseSetup from "../../firebase.setup";
 
-const GoogleMaps = ({user, firebaseSetup}) => {
+const GoogleMaps = ({ user }) => {
   // Load the Google maps scripts
   const { isLoaded } = useLoadScript({
     //TODO import folder with key, and add to gitignore
@@ -54,10 +55,10 @@ const GoogleMaps = ({user, firebaseSetup}) => {
 
       setYourLocation(newCoordinates);
 
-      if (!markerPosition) {
-        // To solve an error that occurs first time a marker is placed.
-        setMarkerPosition(yourLocation);
-      }
+      // if (!markerPosition) {
+      //   // To solve an error that occurs first time a marker is placed.
+      //   setMarkerPosition(yourLocation);
+      // }
     }
 
     //Error handling for yourPosition function
@@ -84,6 +85,7 @@ const GoogleMaps = ({user, firebaseSetup}) => {
     }
     if (navigator.geolocation) {
       // if user accepts to share location
+      console.log("accepted geo location");
       navigator.geolocation.getCurrentPosition(success, showError);
     } else {
       console.log("Geolocation is not supported by this browser.");
@@ -106,13 +108,43 @@ const GoogleMaps = ({user, firebaseSetup}) => {
     }, {merge: true});
   };
 
+  // console.log("user", user ? user.uid : "lol");
   // The places I want to create markers for.
   // This could be a data-driven prop.
 
-  //   const myPlaces = [
-  //     { id: "kth", pos: { lat: 59.347008, lng: 18.072181 } },
-  //     { id: "medis", pos: { lat: 59.314044, lng: 18.071609 } },
-  //   ];
+  async function getLocationsFromFriends() {
+    var friendlist = [];
+
+    let friendsRef = firebaseSetup.db.collection("users").doc(user.uid).get();
+
+    friendsRef.then((doc) => {
+      doc.data().friendList.forEach((friend) => {
+        firebaseSetup.db
+          .collection("users")
+          .where("name", "==", friend)
+          .get()
+          .then((snapshot) =>
+            snapshot.forEach((result) => {
+              console.log("res.data().location", result.data().location);
+            })
+          );
+      });
+    });
+
+    // friendlist
+    //   ? friendlist.forEach((friend) => {
+    //       console.log("friend", friend);
+    //     })
+    //   : console.log("object");
+
+    // var result = await friendlist;
+  }
+  getLocationsFromFriends();
+
+  const friendsLocationArray = [
+    { id: "kth", pos: { lat: 59.347008, lng: 18.072181 } },
+    { id: "medis", pos: { lat: 59.314044, lng: 18.071609 } },
+  ];
 
   // Iterate myPlaces to size, center, and zoom map to contain all markers
   //   const fitBounds = (map) => {
@@ -186,7 +218,7 @@ const GoogleMaps = ({user, firebaseSetup}) => {
             styles: customStyle,
           }}
         >
-          {/* {myPlaces.map((place) => (
+          {friendsLocationArray.map((place) => (
             <Marker
               key={place.id}
               position={place.pos}
@@ -202,7 +234,7 @@ const GoogleMaps = ({user, firebaseSetup}) => {
                 scale: 1.25,
               }}
             />
-          ))} */}
+          ))}
 
           {/* Generates your marker from markerPosition */}
           {(markerPosition || yourLocation) && (
@@ -271,12 +303,29 @@ const GoogleMaps = ({user, firebaseSetup}) => {
         </GoogleMap>
         <button
           onClick={() => {
-            setAddingMarker(!addingMarker); //sets addingMarker to opposite boolean when clicked, also runs yourPosition() which sets yourLocation
+            {
+              /* setAddingMarker(!addingMarker); //sets addingMarker to opposite boolean when clicked, also runs yourPosition() which sets yourLocation */
+            }
+
             yourPosition();
+
+            setMarkerPosition(yourLocation);
           }}
         >
-          {addingMarker ? "Confirm location" : "Add Bar Location"}
+          My position
         </button>
+
+        <button
+          onClick={() => {
+            setAddingMarker(!addingMarker); //sets addingMarker to opposite boolean when clicked, also runs yourPosition() which sets yourLocation
+            {
+              /* yourPosition(); */
+            }
+          }}
+        >
+          {addingMarker ? "Confirm location" : "Move Marker"}
+        </button>
+
         <input type="text" id="barInput" placeholder="Bar"></input>
         <input type="text" id="msgInput" placeholder="Message"></input>
         {/* Position of the user's map click */}
