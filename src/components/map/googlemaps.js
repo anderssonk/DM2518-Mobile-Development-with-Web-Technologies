@@ -9,8 +9,8 @@ import {
 
 import mapStyles from "./customStyles.js";
 
-const GoogleMaps = () => {
-  const [mapRef, setMapRef] = useState(null); //to save a reference to the map
+const GoogleMaps = ({user, firebaseSetup}) => {
+    const [mapRef, setMapRef] = useState(null); //to save a reference to the map
 
   const loadHandler = (map) => {
     console.log("map", map);
@@ -80,6 +80,7 @@ const GoogleMaps = () => {
     };
     console.log("addPosition:", newCoordinates);
     setYourLocation(newCoordinates);
+    //lägg till i firestore -H
   };
 
   const updateMarkerLocation = (ev) => {
@@ -91,6 +92,21 @@ const GoogleMaps = () => {
     };
     setMarkerPosition(newCoordinates);
   };
+
+  // // funkar bara att sätta yourLocation så länge du -
+  // // tillåtit platsen och yourLocation inte är undefined
+  // let locationData = {
+  //   // name: user.displayName,
+  //   // mail: user.email,
+  //   location: yourLocation
+  //   //location: 'yourLocation'
+  // };
+
+  // function locationToData(){
+  //   // firebaseSetup.db.collection('users').doc(user.uid).set(locationData);
+  //   firebaseSetup.db.collection('users').doc(user.uid).set(locationData);
+
+  // }
 
   return (
     <Fragment>

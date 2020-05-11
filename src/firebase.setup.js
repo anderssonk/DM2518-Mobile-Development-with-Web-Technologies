@@ -1,12 +1,15 @@
 import "firebase/auth";
+import "firebase/firestore";
 import * as firebase from "firebase/app";
 import firebaseConfig from "./firebase.config";
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-const firebaseAppAuth = firebaseApp.auth();
+
+firebase.initializeApp(firebaseConfig);
+const firebaseAppAuth = firebase.auth();
+const db = firebase.firestore(); 
 
 const providers = {
   googleProvider: new firebase.auth.GoogleAuthProvider(),
 };
 
-export { providers, firebaseAppAuth };
+export { providers, firebaseAppAuth, db};
