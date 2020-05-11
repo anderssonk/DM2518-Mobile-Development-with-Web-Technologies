@@ -14,8 +14,14 @@ function StatusView({logout, user, firebaseSetup}) {
     mail: user.email,
     // friendList: [],
     // antagligen inte ha med location här heller 
-    location: null
+    // location: null
   }, {merge: true});
+
+  // let data = {
+  //   location: 'mylocation',
+  // };
+  
+  // let setLocation = firebaseSetup.db.collection('users').doc(user.uid).set(data);
   
   return (
   <Page>

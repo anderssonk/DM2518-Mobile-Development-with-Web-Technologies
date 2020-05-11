@@ -45,6 +45,13 @@ const GoogleMaps = ({user, firebaseSetup}) => {
       };
 
       console.log("yourLocation added:", newCoordinates);
+
+      // let userRef = firebaseSetup.db.collection('users').doc(user.uid);
+
+      // let setLocation = userRef.set({
+      //   location: newCoordinates
+      // }, {merge: true});
+
       setYourLocation(newCoordinates);
 
       if (!markerPosition) {
@@ -91,6 +98,12 @@ const GoogleMaps = ({user, firebaseSetup}) => {
       lng: location.lng(),
     };
     setMarkerPosition(newCoordinates);
+
+    let userRef = firebaseSetup.db.collection('users').doc(user.uid);
+
+    let setLocation = userRef.set({
+      location: newCoordinates
+    }, {merge: true});
   };
 
   // The places I want to create markers for.
