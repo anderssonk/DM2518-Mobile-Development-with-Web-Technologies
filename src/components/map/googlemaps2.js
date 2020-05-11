@@ -5,42 +5,52 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import customStyle from "./customStyles";
 
 const GoogleMaps = () => {
-  // The things we need to track in state
+  // Load the Google maps scripts
+  const { isLoaded } = useLoadScript({
+    //TODO import folder with key, and add to gitignore
+    // Enter your own Google Maps API key
+    googleMapsApiKey: "AIzaSyC2yBzA3XpDwN9ZRcpwxGwcFfw1xH0SGxQ",
+  });
 
   const [mapRef, setMapRef] = useState(null); //A reference to the map instance
-  //const [selectedPlace, setSelectedPlace] = useState(null); //Used for displaying marker info
-  const [markerMap, setMarkerMap] = useState({});
-  //const [center, setCenter] = useState(kth_location);
-  const [zoom, setZoom] = useState(5);
-  //   const [clickedLatLng, setClickedLatLng] = useState(null);
-  const [infoOpen, setInfoOpen] = useState(false);
+  const [zoom, setZoom] = useState(13);
 
+  const [markerMap, setMarkerMap] = useState({}); //object with all marker locations will be used when loading in friends marker positions.
+
+  //States
   const [selectedLocation, setSelectedLocation] = useState(null); //used for displaying info for InfoWindow
   const [yourLocation, setYourLocation] = useState(); //used for setting your local position
   const [markerPosition, setMarkerPosition] = useState(); //the markers position, is set when user drags or clicks the map when addingMarker is true.
   const [addingMarker, setAddingMarker] = useState(false); //boolean, is true when marker is in progress of being added, otherwise false.
 
+  const [infoOpen, setInfoOpen] = useState(false);
+
+  console.log("yourLocation", yourLocation);
+  console.log("markerPosition", markerPosition);
+
   //Locations
   var kth_location = { lat: 59.347008, lng: 18.072181 };
   var center_location = { lat: 59.314044, lng: 18.071609 };
 
-  // Load the Google maps scripts
-  const { isLoaded } = useLoadScript({
-    // Enter your own Google Maps API key
-    googleMapsApiKey: "AIzaSyC2yBzA3XpDwN9ZRcpwxGwcFfw1xH0SGxQ",
-  });
+  const yourPosition = () => {
+    //Function that ask permission for user location, and sets state yourLocation to that position.
 
-  function yourPosition() {
-    //sends your position to addPosition function that sets it as hook state
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => addPosition(position),
-        showError
-      );
-    } else {
-      console.log("Geolocation is not supported by this browser.");
+    function success(position) {
+      var newCoordinates = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+
+      console.log("yourLocation added:", newCoordinates);
+      setYourLocation(newCoordinates);
+
+      if (!markerPosition) {
+        // To solve an error that occurs first time a marker is placed.
+        setMarkerPosition(yourLocation);
+      }
     }
 
     //Error handling for yourPosition function
@@ -65,18 +75,12 @@ const GoogleMaps = () => {
         default: //do nothing
       }
     }
-  }
-
-  const addPosition = (position) => {
-    //position: object with position data from yourPosition() function callback.
-    var newCoordinates = {};
-
-    newCoordinates = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    };
-    console.log("addPosition:", newCoordinates);
-    setYourLocation(newCoordinates);
+    if (navigator.geolocation) {
+      // if user accepts to share location
+      navigator.geolocation.getCurrentPosition(success, showError);
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
   };
 
   const updateMarkerLocation = (ev) => {
@@ -116,46 +120,45 @@ const GoogleMaps = () => {
   };
 
   //  Create a mapping of our places to actual Marker objects
-  //   const markerLoadHandler = (marker, place) => {
-  //     return setMarkerMap((prevState) => {
-  //       return { ...prevState, [place.id]: marker };
-  //     });
-  //   };
+  const markerLoadHandler = (marker, place) => {
+    // console.log("mark", marker);
+    return setMarkerMap((prevState) => {
+      return { ...prevState, ["place.id"]: marker };
+    });
+  };
 
-  //   const markerClickHandler = (event, place) => {
-  //     // Remember which place was clicked
-  //     setSelectedPlace(place);
+  const markerClickHandler = (event, place) => {
+    // Remember which place was clicked
+    setSelectedLocation(place);
 
-  //     // Required so clicking a 2nd marker works as expected
-  //     if (infoOpen) {
-  //       setInfoOpen(false);
-  //     }
+    // Required so clicking a 2nd marker works as expected
+    if (infoOpen) {
+      setInfoOpen(false);
+    }
 
-  //     setInfoOpen(true);
+    setInfoOpen(true);
 
-  //     // If you want to zoom in a little on marker click
-  //     if (zoom < 13) {
-  //       setZoom(13);
-  //     }
+    // If you want to zoom in a little on marker click
+    if (zoom < 13) {
+      setZoom(13);
+    }
 
-  //     // if you want to center the selected Marker
-  //     //setCenter(place.pos)
-  //   };
-
+    // if you want to center the selected Marker
+    //setCenter(place.pos)
+  };
+  const getInput = () => {
+    var barInput = document.getElementById("barInput").value;
+    var msgInput = document.getElementById("msgInput").value;
+    return { barInput, msgInput };
+  };
   const renderMap = () => {
     return (
       <Fragment>
         <GoogleMap
-          // Do stuff on map initial laod
-          onLoad={loadHandler}
-          // Save the current center position in state
-          //onCenterChanged={() => setCenter(mapRef.getCenter().toJSON())}
-          // Save the user's map click position
+          onLoad={loadHandler} // Sets a reference to the map when loaded.
           onClick={(ev) => {
-            {
-              /* setClickedLatLng(ev.latLng.toJSON()); */
-            }
             if (addingMarker) {
+              //If user is in placing marker
               setSelectedLocation(null);
               updateMarkerLocation(ev);
             }
@@ -165,6 +168,9 @@ const GoogleMaps = () => {
           mapContainerStyle={{
             height: "70vh",
             width: "100%",
+          }}
+          options={{
+            styles: customStyle,
           }}
         >
           {/* {myPlaces.map((place) => (
@@ -189,12 +195,9 @@ const GoogleMaps = () => {
           {(markerPosition || yourLocation) && (
             <Marker
               position={markerPosition ? markerPosition : yourLocation} //sets marker position as yourLocation if no marker has been set on the map already.
-              onClick={() => {
+              onClick={(event) => {
                 //triggered when click on marker, used for
-                setSelectedLocation({
-                  lat: markerPosition.lat,
-                  lng: markerPosition.lng,
-                });
+                markerClickHandler(event, markerPosition);
               }}
               onDragEnd={(ev) => {
                 //updateMarkerLocation when marker has been dragged.
@@ -202,17 +205,18 @@ const GoogleMaps = () => {
 
                 updateMarkerLocation(ev);
               }}
+              onLoad={(marker) => markerLoadHandler(marker)}
               draggable={addingMarker ? true : false}
               animation={addingMarker ? 1 : 2} //1 = BOUNCE, 2=DROP
-              icon={
-                //changes icon if marker is being added or not.
-                addingMarker
-                  ? {
-                      url:
-                        "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
-                    }
-                  : { url: "http://maps.google.com/mapfiles/ms/micons/bar.png" }
-              }
+              icon={{
+                url: addingMarker
+                  ? "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                  : "http://maps.google.com/mapfiles/ms/micons/bar.png",
+
+                fillOpacity: 1.0,
+                strokeWeight: 0,
+                scale: 1.25,
+              }}
             />
           )}
 
@@ -228,23 +232,29 @@ const GoogleMaps = () => {
             </InfoWindow>
           )} */}
 
-          {selectedLocation && ( //to update info on marker
-            <InfoWindow
-              position={{
-                lat: selectedLocation.lat,
-                lng: selectedLocation.lng,
-              }}
-              onCloseClick={() => {
-                setSelectedLocation(null);
-              }}
-            >
-              <div className="infoWindow">
-                <span className="infoWindowName">Name</span>
-                <span className="infoWindowLocation">Name</span>
-                <span className="infoWindowMsg">Name</span>
-              </div>
-            </InfoWindow>
-          )}
+          {infoOpen &&
+          selectedLocation && ( //to update info on marker
+              <InfoWindow
+                anchor={markerMap["place.id"]}
+                position={{
+                  lat: selectedLocation.lat,
+                  lng: selectedLocation.lng,
+                }}
+                onCloseClick={() => {
+                  setInfoOpen(false);
+                }}
+                pixelOffset={(0, 100)}
+              >
+                <div className="infoWindow">
+                  <br />
+                  <span className="infoWindowName">Name</span>
+                  <br />
+                  <span className="infoWindowLocation">Location</span>
+                  <br />
+                  <span className="infoWindowMsg">Msg</span>
+                </div>
+              </InfoWindow>
+            )}
         </GoogleMap>
         <button
           onClick={() => {
@@ -254,7 +264,8 @@ const GoogleMaps = () => {
         >
           {addingMarker ? "Confirm location" : "Add Bar Location"}
         </button>
-        <input type="text" placeholder="bar"></input>
+        <input type="text" id="barInput" placeholder="Bar"></input>
+        <input type="text" id="msgInput" placeholder="Message"></input>
         {/* Position of the user's map click */}
         {/* {clickedLatLng && (
           <h3>

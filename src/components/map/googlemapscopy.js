@@ -1,3 +1,5 @@
+//----------------USED FOR TESTING PURPOSES-------------------------
+
 import React, { useState, Fragment } from "react";
 
 // We will use these things from the lib
@@ -18,6 +20,8 @@ function GoogleMaps() {
   const [zoom, setZoom] = useState(5);
   const [clickedLatLng, setClickedLatLng] = useState(null);
   const [infoOpen, setInfoOpen] = useState(false);
+
+  const [markerRef, setMarkerRef] = useState(null); //A reference to the map instance
 
   // Load the Google maps scripts
   const { isLoaded } = useLoadScript({

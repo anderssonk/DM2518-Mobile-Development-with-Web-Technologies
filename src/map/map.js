@@ -12,10 +12,10 @@ const Map = () => {
   var center_location = { lat: 59.314044, lng: 18.071609 };
 
   const [mapRef, setMapRef] = useState(null); //to save a reference to the map
-  const [center, setCenter] = useState(center_location); //to save center of map
+
+  // const [center, setCenter] = useState(center_location); //to save center of map
 
   const loadHandler = (map) => {
-    console.log("map", map);
     // Store a reference to the google map instance in state
     setMapRef(map);
   };
@@ -173,5 +173,3 @@ const Map = () => {
 };
 
 export default Map;
-
-//          {/* onCenterChanged={() => setCenter(mapRef.getCenter())} */}

@@ -1,3 +1,4 @@
+//----------------USED FOR TESTING PURPOSES-------------------------
 import React, { useState, Fragment } from "react";
 import {
   GoogleMap,
@@ -6,11 +7,14 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 
+import mapStyles from "./customStyles.js";
+
 const GoogleMaps = () => {
   const [mapRef, setMapRef] = useState(null); //to save a reference to the map
 
   const loadHandler = (map) => {
     console.log("map", map);
+    // Store a reference to the google map instance in state
     setMapRef(map);
     console.log("mapRef", mapRef);
   };
@@ -18,6 +22,7 @@ const GoogleMaps = () => {
   //locations
   var kth_location = { lat: 59.347008, lng: 18.072181 };
   var center_location = { lat: 59.314044, lng: 18.071609 };
+  // console.log("mapRef", mapRef);
 
   const [yourLocation, setYourLocation] = useState(); //used for setting your local position
   console.log("yourLocation:", yourLocation);
@@ -110,6 +115,7 @@ const GoogleMaps = () => {
               updateMarkerLocation(ev);
             }
           }}
+          defaultOptions={{ styles: mapStyles }}
         >
           {/* Generates markers from markerPosition */}
           {(markerPosition || yourLocation) && (
