@@ -16,18 +16,21 @@ import Login from "../src/components/login/login";
 function App({ signInWithGoogle, signOut, user }) {
   const [index, setIndex] = useState(0);
   const [logedIn, setLogedin] = useState(true);
+ 
 
   return (
     <div className="App">
       <Page>
         {user ? (
+          <div>
           <Tabbar
             position="bottom"
             index={index}
             renderTabs={(activeIndex, tabbar) => [
               {
                 content: (
-                  <Map title="Map" active={activeIndex === 0} tabbar={tabbar} />
+                  <Map title="Map" active={activeIndex === 0} tabbar={tabbar} 
+                  user={user} firebaseSetup={firebaseSetup} />
                 ),
                 tab: <Tab label="Map" icon="md-map" />,
               },
@@ -58,8 +61,9 @@ function App({ signInWithGoogle, signOut, user }) {
               },
             ]}
           />
+          </div>
         ) : (
-          <Login login={signInWithGoogle} firebaseSetup={firebaseSetup} user={user} />
+          <Login login={signInWithGoogle} firebaseSetup={firebaseSetup} user={user}/>
         ) }
       </Page>
     </div>

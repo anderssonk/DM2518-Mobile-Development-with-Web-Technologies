@@ -17,6 +17,11 @@ function LoginView({login, user, firebaseSetup}) {
   //   // firebaseSetup.db.collection('users').doc(user.uid).set(data);
   //   firebaseSetup.db.collection('users').doc('user').set(data);
   // };
+
+  // let toDB = 
+  //   // firebaseSetup.db.collection('users').doc(user.uid).set(data);
+  //   firebaseSetup.db.collection('users').doc('user').set(data);
+
   
   return (
     <Page>

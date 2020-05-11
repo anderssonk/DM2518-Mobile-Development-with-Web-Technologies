@@ -6,7 +6,7 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 
-const GoogleMaps = () => {
+const GoogleMaps = ({user, firebaseSetup}) => {
   const [mapRef, setMapRef] = useState(null); //to save a reference to the map
 
   const loadHandler = (map) => {
@@ -87,6 +87,21 @@ const GoogleMaps = () => {
     setMarkerPosition(newCoordinates);
   };
 
+  // // funkar bara att sätta yourLocation så länge du -
+  // // tillåtit platsen och yourLocation inte är undefined
+  // let locationData = {
+  //   // name: user.displayName,
+  //   // mail: user.email,
+  //   location: yourLocation
+  //   //location: 'yourLocation'
+  // };
+
+  // function locationToData(){
+  //   // firebaseSetup.db.collection('users').doc(user.uid).set(locationData);
+  //   firebaseSetup.db.collection('users').doc(user.uid).set(locationData);
+
+  // }
+
   return (
     <div>
       <LoadScript
@@ -166,6 +181,14 @@ const GoogleMaps = () => {
           {addingMarker ? "Confirm location" : "Add Bar Location"}
         </button>
         {/* <button onClick={yourPosition}>adddd</button> */}
+      </div>
+      <div>
+       {/* <button onClick={() => console.log(yourLocation)}>Location to firestore</button> */}
+       {/* {yourLocation && ( */}
+       {/* <button onClick={() => locationToData()}>Location to firestore</button> */}
+       {/* ) */}
+       {/* } */}
+        {/* {locationToData()} */}
       </div>
     </div>
   );
