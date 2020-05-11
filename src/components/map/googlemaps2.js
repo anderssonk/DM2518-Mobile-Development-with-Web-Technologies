@@ -7,7 +7,7 @@ import {
 } from "@react-google-maps/api";
 import customStyle from "./customStyles";
 
-const GoogleMaps = () => {
+const GoogleMaps = ({user, firebaseSetup}) => {
   // Load the Google maps scripts
   const { isLoaded } = useLoadScript({
     //TODO import folder with key, and add to gitignore
