@@ -54,6 +54,12 @@ const GoogleMaps = ({ user }) => {
 
       console.log("yourLocation added:", newCoordinates);
 
+      // let userRef = firebaseSetup.db.collection('users').doc(user.uid);
+
+      // let setLocation = userRef.set({
+      //   location: newCoordinates
+      // }, {merge: true});
+
       setYourLocation(newCoordinates);
 
       // if (!markerPosition) {
