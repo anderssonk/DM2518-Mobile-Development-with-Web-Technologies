@@ -1,2 +1,4 @@
 node_modules
 firebase.config.js
+/build
+!firebase.json
