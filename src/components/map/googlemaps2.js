@@ -38,6 +38,9 @@ const GoogleMaps = ({ user }) => {
   const [selectedLocation, setSelectedLocation] = useState(null); //used for displaying info for InfoWindow
   const [infoOpen, setInfoOpen] = useState(false);
 
+  //MyInputMessage
+  const [messageState, setMessageState] = useState("");
+
   //Your location
   const [yourLocation, setYourLocation] = useState(); //used for setting your local position
   console.log("yourLocation", yourLocation);
@@ -182,6 +185,7 @@ const GoogleMaps = ({ user }) => {
     //Add message to Firestore
     var msgInput = document.getElementById("msgInput").value;
 
+    setMessageState(msgInput);
     userRef.set(
       {
         message: msgInput,
@@ -289,14 +293,14 @@ const GoogleMaps = ({ user }) => {
               <div className="infoWindow">
                 <br />
                 <span className="infoWindowName">
-                  {markerMap[selectedLocation.id]
-                    ? selectedLocation.id
-                    : "My position"}
+                  {selectedLocation.id ? selectedLocation.id : "My position"}
                 </span>
                 <br />
 
                 <span className="infoWindowMsg">
-                  {selectedLocation.message ? selectedLocation.message : ""}
+                  {selectedLocation.message
+                    ? selectedLocation.message
+                    : messageState}
                 </span>
               </div>
             </InfoWindow>
