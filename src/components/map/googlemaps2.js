@@ -9,39 +9,41 @@ import customStyle from "./customStyles";
 import * as firebaseSetup from "../../firebase.setup";
 
 const GoogleMaps = ({ user }) => {
+  let userRef = firebaseSetup.db.collection("users").doc(user.uid); //reference to users file in firestore
+
   // Load the Google maps scripts
   const { isLoaded } = useLoadScript({
     //TODO import folder with key, and add to gitignore
-    // Enter your own Google Maps API key
     googleMapsApiKey: "AIzaSyC2yBzA3XpDwN9ZRcpwxGwcFfw1xH0SGxQ",
   });
-  let userRef = firebaseSetup.db.collection("users").doc(user.uid); //reference to users file in firestore
 
-  const [friendsArray, setFriendsArray] = useState([]);
+  const [friendsArray, setFriendsArray] = useState([]); //array used for retrieving data about friends from firestore
 
-  const [mapRef, setMapRef] = useState(null); //A reference to the map instance
-  const [zoom, setZoom] = useState(13);
+  //GoogleMap
+  const [mapRef, setMapRef] = useState(null); //A reference to the map instance (used for API map specific function like (getCenter() etc..))
+  const [zoom, setZoom] = useState(13); //Zoom setting on map
 
-  const [markerMap, setMarkerMap] = useState({}); //object with all marker locations will be used when loading in friends marker positions.
+  //Markers
+  //----for rendering on map
+  const [markerMap, setMarkerMap] = useState({}); // all marker objects from friends.
+  const [yourMarkerMap, setYourMarkerMap] = useState({}); //used for referencing your own marker.
 
-  console.log("markerMap.id", markerMap.id);
-  //States
-  const [selectedLocation, setSelectedLocation] = useState(null); //used for displaying info for InfoWindow
-
-  console.log("selectedLocation", selectedLocation);
-
-  const [yourLocation, setYourLocation] = useState(); //used for setting your local position
-  const [markerPosition, setMarkerPosition] = useState(); //the markers position, is set when user drags or clicks the map when addingMarker is true.
+  console.log("yourMarkerMap", yourMarkerMap);
+  //---for setting positions and editing
   const [addingMarker, setAddingMarker] = useState(false); //boolean, is true when marker is in progress of being added, otherwise false.
-
-  const [infoOpen, setInfoOpen] = useState(false);
-
-  console.log("yourLocation", yourLocation);
+  const [markerPosition, setMarkerPosition] = useState(); //the markers position, is set when user drags or clicks the map when addingMarker is true.
   console.log("markerPosition", markerPosition);
 
-  //Locations
+  //InfoWindow
+  const [selectedLocation, setSelectedLocation] = useState(null); //used for displaying info for InfoWindow
+  const [infoOpen, setInfoOpen] = useState(false);
+
+  //Your location
+  const [yourLocation, setYourLocation] = useState(); //used for setting your local position
+  console.log("yourLocation", yourLocation);
+
+  //Hard coded locations
   var kth_location = { lat: 59.347008, lng: 18.072181 };
-  var center_location = { lat: 59.314044, lng: 18.071609 };
 
   const yourPosition = () => {
     //Function that ask permission for user location, and sets state yourLocation to that position.
@@ -54,18 +56,16 @@ const GoogleMaps = ({ user }) => {
 
       console.log("yourLocation added:", newCoordinates);
 
-      // let userRef = firebaseSetup.db.collection('users').doc(user.uid);
-
-      // let setLocation = userRef.set({
-      //   location: newCoordinates
-      // }, {merge: true});
+      //Add location to Firestore DB
+      userRef.set(
+        {
+          location: newCoordinates,
+        },
+        { merge: true }
+      );
 
       setYourLocation(newCoordinates);
-
-      // if (!markerPosition) {
-      //   // To solve an error that occurs first time a marker is placed.
-      //   setMarkerPosition(yourLocation);
-      // }
+      setMarkerPosition(newCoordinates);
     }
 
     //Error handling for yourPosition function
@@ -108,6 +108,7 @@ const GoogleMaps = ({ user }) => {
     };
     setMarkerPosition(newCoordinates);
 
+    //Add location to Firestore DB
     userRef.set(
       {
         location: newCoordinates,
@@ -120,10 +121,9 @@ const GoogleMaps = ({ user }) => {
     setFriendsArray((prevArray) => [...prevArray, data]);
   };
 
-  function getLocationsFromDB() {
-    let friendsRef = firebaseSetup.db.collection("users").doc(user.uid).get();
-
-    friendsRef.then((doc) => {
+  function getDataFromDB() {
+    //get friend info from friendlist in Firestore DB
+    userRef.get().then((doc) => {
       doc.data().friendList.forEach((friend) => {
         firebaseSetup.db
           .collection("users")
@@ -143,30 +143,20 @@ const GoogleMaps = ({ user }) => {
     });
   }
 
-  // Iterate myPlaces to size, center, and zoom map to contain all markers
-  //   const fitBounds = (map) => {
-  //     const bounds = new window.google.maps.LatLngBounds();
-  //     myPlaces.map((place) => {
-  //       bounds.extend(place.pos);
-  //       return place.id;
-  //     });
-  //     map.fitBounds(bounds);
-  //   };
-
   const loadHandler = (map) => {
-    console.log("map", map);
     // Store a reference to the google map instance in state
     setMapRef(map);
-    // Fit map bounds to contain all markers
-    // fitBounds(map);
   };
 
-  //  Create a mapping of our places to actual Marker objects
-  const markerLoadHandler = (marker, place) => {
-    console.log("marker within markerLoadHandler function", marker);
+  const friendMarkerLoadHandler = (marker, place) => {
+    //  Create a mapping of our friends places(locations) to actual Marker objects
     return setMarkerMap((prevState) => {
       return { ...prevState, [place.id]: marker };
     });
+  };
+  const myMarkerLoadHandler = (marker) => {
+    //  Create a mapping of your places(locations) to actual Marker objects
+    return setYourMarkerMap(marker);
   };
 
   const markerClickHandler = (event, place) => {
@@ -186,12 +176,12 @@ const GoogleMaps = ({ user }) => {
     }
 
     // if you want to center the selected Marker
-    //setCenter(place.pos)
+    // setCenter(place.pos)
   };
   const writeMsgToDb = () => {
+    //Add message to Firestore
     var msgInput = document.getElementById("msgInput").value;
 
-    // console.log("msgInpt", msgInput);
     userRef.set(
       {
         message: msgInput,
@@ -205,8 +195,10 @@ const GoogleMaps = ({ user }) => {
         <GoogleMap
           onLoad={loadHandler} // Sets a reference to the map when loaded.
           onClick={(ev) => {
+            setInfoOpen(false);
+
             if (addingMarker) {
-              //If user is in placing marker
+              //If user is in "placing marker-action (the marker is green and jumping)"
               setSelectedLocation(null);
               updateMarkerLocation(ev);
             }
@@ -227,7 +219,7 @@ const GoogleMaps = ({ user }) => {
               <Marker
                 key={place.id}
                 position={place.position}
-                onLoad={(marker) => markerLoadHandler(marker, place)}
+                onLoad={(marker) => friendMarkerLoadHandler(marker, place)}
                 onClick={(event) => markerClickHandler(event, place)}
                 // Custom icon
                 icon={{
@@ -236,7 +228,7 @@ const GoogleMaps = ({ user }) => {
                   fillColor: "#0000ff",
                   fillOpacity: 1.0,
                   strokeWeight: 0,
-                  scale: 1.25,
+                  scale: 1,
                 }}
               />
             ))}
@@ -249,13 +241,13 @@ const GoogleMaps = ({ user }) => {
                 //triggered when click on marker, used for
                 markerClickHandler(event, markerPosition);
               }}
+              onLoad={(marker) => myMarkerLoadHandler(marker)}
               onDragEnd={(ev) => {
                 //updateMarkerLocation when marker has been dragged.
                 console.log("marker Drag End");
 
                 updateMarkerLocation(ev);
               }}
-              //onLoad={(marker) => markerLoadHandler(marker)}
               draggable={addingMarker ? true : false}
               animation={addingMarker ? 1 : 2} //1 = BOUNCE, 2=DROP
               icon={{
@@ -282,29 +274,33 @@ const GoogleMaps = ({ user }) => {
             </InfoWindow>
           )} */}
 
-          {infoOpen &&
-          selectedLocation && ( //to update info on marker
-              <InfoWindow
-                anchor={markerMap[selectedLocation.id]}
-                //position={{
-                // lat: selectedLocation.lat,
-                //lng: selectedLocation.lng,
-                //}}
-                onCloseClick={() => {
-                  setInfoOpen(false);
-                }}
-              >
-                <div className="infoWindow">
-                  <br />
-                  <span className="infoWindowName">{selectedLocation.id}</span>
-                  <br />
+          {infoOpen && selectedLocation && (
+            //to update info on marker
+            <InfoWindow
+              anchor={
+                markerMap[selectedLocation.id]
+                  ? markerMap[selectedLocation.id]
+                  : yourMarkerMap
+              }
+              onCloseClick={() => {
+                setInfoOpen(false);
+              }}
+            >
+              <div className="infoWindow">
+                <br />
+                <span className="infoWindowName">
+                  {markerMap[selectedLocation.id]
+                    ? selectedLocation.id
+                    : "My position"}
+                </span>
+                <br />
 
-                  <span className="infoWindowMsg">
-                    {selectedLocation.message ? selectedLocation.message : ""}
-                  </span>
-                </div>
-              </InfoWindow>
-            )}
+                <span className="infoWindowMsg">
+                  {selectedLocation.message ? selectedLocation.message : ""}
+                </span>
+              </div>
+            </InfoWindow>
+          )}
         </GoogleMap>
         <button
           onClick={() => {
@@ -318,7 +314,8 @@ const GoogleMaps = ({ user }) => {
 
         <button
           onClick={() => {
-            setAddingMarker(!addingMarker); //sets addingMarker to opposite boolean when clicked, also runs yourPosition() which sets yourLocation
+            setAddingMarker(!addingMarker);
+            //sets addingMarker to opposite boolean when clicked
           }}
         >
           {addingMarker ? "Confirm location" : "Move Marker"}
@@ -326,13 +323,14 @@ const GoogleMaps = ({ user }) => {
 
         <button
           onClick={() => {
-            getLocationsFromDB();
+            getDataFromDB();
           }}
         >
           Add your friends to map TEST
         </button>
 
         <input type="text" id="msgInput" placeholder="Message"></input>
+
         <button
           onClick={() => {
             writeMsgToDb();
