@@ -210,7 +210,7 @@ const GoogleMaps = ({ user }) => {
 					center={mapRef ? mapRef.getCenter() : kth_location}
 					zoom={zoom}
 					mapContainerStyle={{
-						height: "70vh",
+						height: "76vh",
 						width: "100%",
 					}}
 					options={{
@@ -266,18 +266,6 @@ const GoogleMaps = ({ user }) => {
 						/>
 					)}
 
-					{/* {infoOpen && selectedPlace && (
-            <InfoWindow
-              anchor={markerMap[selectedPlace.id]}
-              onCloseClick={() => setInfoOpen(false)}
-            >
-              <div>
-                <h3>{selectedPlace.id}</h3>
-                <div>This is your info window content</div>
-              </div>
-            </InfoWindow>
-          )} */}
-
 					{infoOpen && selectedLocation && (
 						//to update info on marker
 						<InfoWindow
@@ -306,46 +294,55 @@ const GoogleMaps = ({ user }) => {
 						</InfoWindow>
 					)}
 				</GoogleMap>
-				<button
-					className="btn map-btn"
-					onClick={() => {
-						yourPosition();
+				<div className="map-buttons">
+					<button
+						id="drink-btn"
+						className="btn drink-btn pulse"
+						onClick={() => {
+							yourPosition();
+							setMarkerPosition(yourLocation);
+							const element = document.getElementById("drink-btn");
+							element.classList.toggle("pulse");
+							element.classList.toggle("active-state");
+							element.childNodes[0].classList.toggle("fa-wine-glass");
+							element.childNodes[0].classList.toggle("fa-wine-glass-alt");
+						}}
+					>
+						<i class="fas fa-wine-glass"></i>
+					</button>
 
-						setMarkerPosition(yourLocation);
-					}}
-				>
-					<i class="zmdi zmdi-pin"></i> My Position
-				</button>
+					<div>
+						<button
+							className="btn"
+							onClick={() => {
+								setAddingMarker(!addingMarker);
+								//sets addingMarker to opposite boolean when clicked
+							}}
+						>
+							{addingMarker ? "Confirm location" : "Move Marker"}
+						</button>
 
-				<button
-					className="btn map-btn"
-					onClick={() => {
-						setAddingMarker(!addingMarker);
-						//sets addingMarker to opposite boolean when clicked
-					}}
-				>
-					{addingMarker ? "Confirm location" : "Move Marker"}
-				</button>
+						{/* <button
+						className="btn map-btn"
+						onClick={() => {
+							getDataFromDB();
+						}}
+					>
+						Add your friends to map TEST
+					</button> */}
 
-				<button
-					className="btn map-btn"
-					onClick={() => {
-						getDataFromDB();
-					}}
-				>
-					Add your friends to map TEST
-				</button>
+						<input type="text" id="msgInput" placeholder="Message"></input>
 
-				<input type="text" id="msgInput" placeholder="Message"></input>
-
-				<button
-					className="btn map-btn"
-					onClick={() => {
-						writeMsgToDb();
-					}}
-				>
-					write msg to db
-				</button>
+						<button
+							className="btn map-btn"
+							onClick={() => {
+								writeMsgToDb();
+							}}
+						>
+							<i class="zmdi zmdi-comment"></i>
+						</button>
+					</div>
+				</div>
 			</Fragment>
 		);
 	};
