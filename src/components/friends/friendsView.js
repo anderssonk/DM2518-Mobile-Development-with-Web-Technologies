@@ -7,11 +7,11 @@ import "onsenui/css/onsen-css-components.css";
 import Friends from "./friends";
 
 function FriendsTest({ friends, user, firebaseSetup, getSearch, logout }) {
-  const [error, setError] = useState();
+	const [error, setError] = useState();
 
-  return (
-      <Page>
-      <div className="logged-in-as">
+	return (
+		<Page>
+			<div className="logged-in-as">
 				Logged in as {user.displayName}
 				<button onClick={logout} className="btn logout-btn">
 					<i class="zmdi zmdi-square-right"></i>
@@ -19,37 +19,26 @@ function FriendsTest({ friends, user, firebaseSetup, getSearch, logout }) {
 			</div>
 			<div>
 				<h1>Friendlist</h1>
-				{/* want to display for every item in the list  */}
-				{/* <button onClick={console.log("my list: ", myFriendList)}>Get my list</button> */}
-				{/* {getFriendList()} */}
-				{/* {console.log("my friend list ", myFriendList)} */}
-				{/* {getFriendList() ? console.log("my list: ", myList) : console.log("No list", myList) && myList.map(item => <li>{item}</li>)} */}
 			</div>
 
 			{/* form to search for friends and optionally add to friendlist */}
 			<form onSubmit={(e) => getSearch(e)}>
-				<input
-					id="input_id"
-					className="input-field"
-					type="text"
-					placeholder="Enter friend's name"
-				/>
-				<button type="submit" className="btn search-btn">
+				<ons-search-input className="input-field" id="input_id" type="text" />
+				<button
+					type="submit"
+					className="btn search-btn"
+					onClick={(e) => getSearch(e)}
+				>
 					<i class="zmdi zmdi-account-add"></i>
 				</button>
 			</form>
-      <ons-search-input id="input_id" type="text" placeholder="Search for a friend!"/>
-        <ons-button onClick={(e) => getSearch(e)}>
-          Search
-        </ons-button>
-        <List>
-        <ons-list-header>My Friends</ons-list-header>
-        {friends.map((i) => (
-          <ons-list-item tappable>{i}</ons-list-item>
-        ))}
-        </List>
-      </Page>
-  );
+			<List>
+				{friends.map((i) => (
+					<ons-list-item tappable>{i}</ons-list-item>
+				))}
+			</List>
+		</Page>
+	);
 }
 
 export default FriendsTest;
