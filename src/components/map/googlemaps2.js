@@ -7,6 +7,7 @@ import {
 } from "@react-google-maps/api";
 import customStyle from "./customStyles";
 import * as firebaseSetup from "../../firebase.setup";
+import { googleMapsApiKey } from "../../apiConfig.js";
 
 const GoogleMaps = ({ user }) => {
 	let userRef = firebaseSetup.db.collection("users").doc(user.uid); //reference to users file in firestore
@@ -14,7 +15,7 @@ const GoogleMaps = ({ user }) => {
 	// Load the Google maps scripts
 	const { isLoaded } = useLoadScript({
 		//TODO import folder with key, and add to gitignore
-		googleMapsApiKey: "AIzaSyC2yBzA3XpDwN9ZRcpwxGwcFfw1xH0SGxQ",
+		googleMapsApiKey,
 	});
 
 	const refArray = useRef([]);
@@ -270,6 +271,7 @@ const GoogleMaps = ({ user }) => {
 					}}
 					options={{
 						styles: customStyle,
+						fullscreenControl: false,
 					}}
 				>
 					{/* Generates friends markers */}
@@ -291,7 +293,6 @@ const GoogleMaps = ({ user }) => {
 								}}
 							/>
 						))}
-
 					{/* Generates your marker from markerPosition */}
 					{(markerPosition || yourLocation) && (
 						<Marker
@@ -320,7 +321,6 @@ const GoogleMaps = ({ user }) => {
 							}}
 						/>
 					)}
-
 					{infoOpen && selectedLocation && (
 						//to update info on marker
 						<InfoWindow
@@ -334,9 +334,10 @@ const GoogleMaps = ({ user }) => {
 							}}
 						>
 							<div className="infoWindow">
-								<br />
 								<span className="infoWindowName">
-									{selectedLocation.id ? selectedLocation.id : "My position"}
+									<h1>
+										{selectedLocation.id ? selectedLocation.id : "My position"}
+									</h1>
 								</span>
 								<br />
 
@@ -347,6 +348,7 @@ const GoogleMaps = ({ user }) => {
 								</span>
 							</div>
 						</InfoWindow>
+					)}
 					)}
 				</GoogleMap>
 				<div className="map-buttons">
