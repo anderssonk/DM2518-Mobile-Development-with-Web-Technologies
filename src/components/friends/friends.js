@@ -4,7 +4,7 @@ import { Page, List, Button, Tabbar, Tab } from "react-onsenui"; // Only import 
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 import FriendsView from "../friends/friendsView";
-import FriendsTest from "../friends/friendsTest";
+
 
 const firebase = require('firebase');
 
@@ -71,7 +71,7 @@ function Friends({ user, firebaseSetup }) {
   return (
     <Page>
       {/* <FriendsView user={user} firebaseSetup={firebaseSetup} /> */}
-      <FriendsTest
+      <FriendsView
         friends={friends}
         user={user}
         firebaseSetup={firebaseSetup}
