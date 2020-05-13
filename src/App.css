@@ -90,6 +90,7 @@ input {
 	margin: auto 5px;
 	background-color: transparent;
 	border: none !important;
+	cursor: pointer;
 }
 
 .search-btn {
