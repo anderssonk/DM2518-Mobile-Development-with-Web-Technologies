@@ -7,6 +7,7 @@ import {
 } from "@react-google-maps/api";
 import customStyle from "./customStyles";
 import * as firebaseSetup from "../../firebase.setup";
+import {googleMapsApiKey} from '../../apiConfig.js';
 
 const GoogleMaps = ({ user }) => {
   let userRef = firebaseSetup.db.collection("users").doc(user.uid); //reference to users file in firestore
@@ -14,7 +15,7 @@ const GoogleMaps = ({ user }) => {
   // Load the Google maps scripts
   const { isLoaded } = useLoadScript({
     //TODO import folder with key, and add to gitignore
-    googleMapsApiKey: "AIzaSyC2yBzA3XpDwN9ZRcpwxGwcFfw1xH0SGxQ",
+	googleMapsApiKey
   });
 
   const refArray = useRef([]);
