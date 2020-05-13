@@ -271,6 +271,7 @@ const GoogleMaps = ({ user }) => {
           }}
           options={{
             styles: customStyle,
+            fullscreenControl: false,
           }}
         >
           {/* Generates friends markers */}
