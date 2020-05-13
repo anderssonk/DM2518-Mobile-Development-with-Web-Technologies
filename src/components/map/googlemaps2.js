@@ -153,6 +153,7 @@ const GoogleMaps = ({ user }) => {
 
   const friendMarkerLoadHandler = (marker, place) => {
     //  Create a mapping of our friends places(locations) to actual Marker objects
+    console.log("place", place)
     return setMarkerMap((prevState) => {
       return { ...prevState, [place.id]: marker };
     });
