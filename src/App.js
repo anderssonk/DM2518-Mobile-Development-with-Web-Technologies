@@ -40,19 +40,6 @@ function App({ signInWithGoogle, signOut, user }) {
 									),
 									tab: <Tab label="Map" icon="md-map" />,
 								},
-								// {
-								// 	content: (
-								// 		<Status
-								// 			title="Status"
-								// 			active={activeIndex === 1}
-								// 			tabbar={tabbar}
-								// 			logout={signOut}
-								// 			firebaseSetup={firebaseSetup}
-								// 			user={user}
-								// 		/>
-								// 	),
-								// 	tab: <Tab label="Status" icon="md-local-bar" />,
-								// },
 								{
 									content: (
 										<Friends
