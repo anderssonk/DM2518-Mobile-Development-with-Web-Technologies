@@ -5,3 +5,74 @@
 .App-link {
 	color: #61dafb;
 }
+
+.page__content {
+	background-color: #000000 !important;
+	background-image: linear-gradient(
+		to right,
+		#e0eafc 0%,
+		#cfdef3 51%,
+		#e0eafc 100%
+	) !important;
+	background-size: cover;
+}
+
+.tabbar {
+	height: 4rem;
+	border-top: #000 !important;
+	background-image: linear-gradient(
+		to right,
+		#eb3349 0%,
+		#f45c43 51%,
+		#eb3349 100%
+	);
+	background-size: cover;
+}
+
+.tabbar__button {
+	height: 4rem;
+	color: #fff;
+	font-family: "Balsamiq Sans", cursive !important;
+}
+
+:checked + .tabbar__button {
+	color: #b3c4db !important;
+}
+
+.tabbar__icon {
+	font-size: 28px;
+	line-height: 28px;
+	height: 30px;
+}
+
+.tabbar__icon + .tabbar__label {
+	font-size: 13px !important;
+	line-height: 1;
+	margin: 0;
+	font-weight: 400;
+}
+
+form {
+	height: 2.5rem !important;
+	margin: 0.5rem !important;
+}
+
+.input-field {
+	height: 25px !important;
+	width: 50vw;
+	padding: 5px !important;
+	margin: auto 5px;
+	font-size: 13px !important;
+}
+
+.btn {
+	margin: auto 5px;
+	background-color: #9eafc7 !important;
+	background-color: transparent;
+	border: none !important;
+	border-radius: 0.1rem !important;
+}
+
+.search-btn {
+	font-size: 22px !important;
+}

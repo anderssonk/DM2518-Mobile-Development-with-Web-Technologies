@@ -1,0 +1,23 @@
+.App,
+.page,
+.list,
+.tabbar__label,
+h1,
+h2,
+h3,
+button,
+input {
+	font-family: "Balsamiq Sans", cursive !important;
+}
+
+.tabbar__icon {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+	font-size: 2rem !important;
+}
+
+.list-item {
+	font-size: 1.2rem !important;
+}
