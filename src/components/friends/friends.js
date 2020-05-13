@@ -8,7 +8,7 @@ import FriendsView from "../friends/friendsView";
 
 const firebase = require('firebase');
 
-function Friends({ user, firebaseSetup }) {
+function Friends({ user, firebaseSetup, logout }) {
   const [friends, setFriends] = useState([]);
   let friendList = [];
   let userRef = firebaseSetup.db.collection("users").doc(user.uid);
@@ -71,11 +71,13 @@ function Friends({ user, firebaseSetup }) {
   return (
     <Page>
       {/* <FriendsView user={user} firebaseSetup={firebaseSetup} /> */}
+      
       <FriendsView
         friends={friends}
         user={user}
         firebaseSetup={firebaseSetup}
         getSearch={getSearch}
+        logout={logout}
       />
     </Page>
   );

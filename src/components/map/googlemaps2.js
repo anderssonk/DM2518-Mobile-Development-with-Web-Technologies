@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect, useRef } from "react";
 import {
   useLoadScript,
   GoogleMap,
@@ -17,7 +17,9 @@ const GoogleMaps = ({ user }) => {
     googleMapsApiKey: "AIzaSyC2yBzA3XpDwN9ZRcpwxGwcFfw1xH0SGxQ",
   });
 
+  const refArray = useRef([]);
   const [friendsArray, setFriendsArray] = useState([]); //array used for retrieving data about friends from firestore
+  console.log("friends array state:", friendsArray);
 
   //GoogleMap
   const [mapRef, setMapRef] = useState(null); //A reference to the map instance (used for API map specific function like (getCenter() etc..))
@@ -28,22 +30,28 @@ const GoogleMaps = ({ user }) => {
   const [markerMap, setMarkerMap] = useState({}); // all marker objects from friends.
   const [yourMarkerMap, setYourMarkerMap] = useState({}); //used for referencing your own marker.
 
-  console.log("yourMarkerMap", yourMarkerMap);
+  // console.log("yourMarkerMap", yourMarkerMap);
   //---for setting positions and editing
   const [addingMarker, setAddingMarker] = useState(false); //boolean, is true when marker is in progress of being added, otherwise false.
   const [markerPosition, setMarkerPosition] = useState(); //the markers position, is set when user drags or clicks the map when addingMarker is true.
-  console.log("markerPosition", markerPosition);
+  //console.log("markerPosition", markerPosition);
 
   //InfoWindow
   const [selectedLocation, setSelectedLocation] = useState(null); //used for displaying info for InfoWindow
   const [infoOpen, setInfoOpen] = useState(false);
 
+  //MyInputMessage
+  const [messageState, setMessageState] = useState("");
+
   //Your location
   const [yourLocation, setYourLocation] = useState(); //used for setting your local position
-  console.log("yourLocation", yourLocation);
+  //console.log("yourLocation", yourLocation);
 
   //Hard coded locations
   var kth_location = { lat: 59.347008, lng: 18.072181 };
+  useEffect(() => {
+    getDataFromDB(friendsArray);
+  }, [refArray]);
 
   const yourPosition = () => {
     //Function that ask permission for user location, and sets state yourLocation to that position.
@@ -117,31 +125,80 @@ const GoogleMaps = ({ user }) => {
     );
   };
 
-  const getFriendsData = (data) => {
-    setFriendsArray((prevArray) => [...prevArray, data]);
-  };
-
   function getDataFromDB() {
-    //get friend info from friendlist in Firestore DB
+    console.log("getDataBase f() Start");
     userRef.get().then((doc) => {
       doc.data().friendList.forEach((friend) => {
         firebaseSetup.db
           .collection("users")
           .where("name", "==", friend)
-          .get()
-          .then((snapshot) =>
-            snapshot.forEach((result) => {
-              // console.log("res.data().location", friend, result.data());
-              getFriendsData({
-                id: friend,
-                position: result.data().location,
-                message: result.data().message,
-              });
-            })
-          );
+          .onSnapshot((snapshot) => {
+            let changes = snapshot.docChanges(); //adds a listener to the firestore db
+            // var addArray = [];
+
+            changes.forEach((change) => {
+              if (change.type === "added") {
+                console.log("1. FriendsArray", friendsArray);
+                console.log("2. Added: ", change.doc.data());
+                var addObject = {};
+                addObject.id = change.doc.data().name;
+                addObject.position = change.doc.data().location;
+                addObject.message = change.doc.data().message;
+
+                // addArray.push(addObject);
+                refArray.current.push(addObject);
+                console.log("1.ADDED FRIENDSARRAY", friendsArray);
+              }
+              if (change.type === "removed") {
+                console.log("Removed: ", change.doc.data());
+              }
+
+              if (change.type === "modified") {
+                console.log("MODIFIED");
+                console.log("refArray.current", refArray.current);
+
+                var findIndex = refArray.current.findIndex(
+                  (friend) => friend.id === change.doc.data().name
+                );
+                // console.log(
+                //   "findIndex of:",
+                //   change.doc.data().name,
+                //   "  :  ",
+                //   findIndex
+                // );
+
+                var updArray = refArray.current;
+
+                console.log("updArray before", updArray);
+                var addObject = {};
+                addObject.id = change.doc.data().name;
+                addObject.position = change.doc.data().location;
+                addObject.message = change.doc.data().message;
+
+                refArray.current[findIndex] = addObject;
+                updArray[findIndex] = addObject;
+
+                console.log("updArray after", updArray);
+
+                setFriendsArray(updArray);
+                console.log("friendsarrayLAST", friendsArray);
+              }
+            });
+
+            console.log("refArray.current", refArray.current);
+
+            // setFriendsArray((prevState) => [...prevState, ...refArray.current]);
+            setFriendsArray([...refArray.current]);
+
+            // if (addArray.length > 0) {
+            // }
+          });
       });
     });
+    console.log("getDataFromDB END");
   }
+
+  // getDataFromDB();
 
   const loadHandler = (map) => {
     // Store a reference to the google map instance in state
@@ -149,6 +206,7 @@ const GoogleMaps = ({ user }) => {
   };
 
   const friendMarkerLoadHandler = (marker, place) => {
+    console.log("place", place);
     //  Create a mapping of our friends places(locations) to actual Marker objects
     return setMarkerMap((prevState) => {
       return { ...prevState, [place.id]: marker };
@@ -182,6 +240,7 @@ const GoogleMaps = ({ user }) => {
     //Add message to Firestore
     var msgInput = document.getElementById("msgInput").value;
 
+    setMessageState(msgInput);
     userRef.set(
       {
         message: msgInput,
@@ -206,7 +265,7 @@ const GoogleMaps = ({ user }) => {
           center={mapRef ? mapRef.getCenter() : kth_location}
           zoom={zoom}
           mapContainerStyle={{
-            height: "70vh",
+            height: "75vh",
             width: "100%",
           }}
           options={{
@@ -262,18 +321,6 @@ const GoogleMaps = ({ user }) => {
             />
           )}
 
-          {/* {infoOpen && selectedPlace && (
-            <InfoWindow
-              anchor={markerMap[selectedPlace.id]}
-              onCloseClick={() => setInfoOpen(false)}
-            >
-              <div>
-                <h3>{selectedPlace.id}</h3>
-                <div>This is your info window content</div>
-              </div>
-            </InfoWindow>
-          )} */}
-
           {infoOpen && selectedLocation && (
             //to update info on marker
             <InfoWindow
@@ -289,55 +336,59 @@ const GoogleMaps = ({ user }) => {
               <div className="infoWindow">
                 <br />
                 <span className="infoWindowName">
-                  {markerMap[selectedLocation.id]
-                    ? selectedLocation.id
-                    : "My position"}
+                  {selectedLocation.id ? selectedLocation.id : "My position"}
                 </span>
                 <br />
 
                 <span className="infoWindowMsg">
-                  {selectedLocation.message ? selectedLocation.message : ""}
+                  {selectedLocation.message
+                    ? selectedLocation.message
+                    : messageState}
                 </span>
               </div>
             </InfoWindow>
           )}
         </GoogleMap>
-        <button
-          onClick={() => {
-            yourPosition();
+        <div className="map-buttons">
+          <button
+            id="drink-btn"
+            className="btn drink-btn pulse"
+            onClick={() => {
+              yourPosition();
+              setMarkerPosition(yourLocation);
+              const element = document.getElementById("drink-btn");
+              element.classList.toggle("pulse");
+              element.classList.toggle("active-state");
+              element.childNodes[0].classList.toggle("fa-wine-glass");
+              element.childNodes[0].classList.toggle("fa-wine-glass-alt");
+            }}
+          >
+            <i class="fas fa-wine-glass"></i>
+          </button>
 
-            setMarkerPosition(yourLocation);
-          }}
-        >
-          My position
-        </button>
+          <div>
+            <button
+              className="btn"
+              onClick={() => {
+                setAddingMarker(!addingMarker);
+                //sets addingMarker to opposite boolean when clicked
+              }}
+            >
+              {addingMarker ? "Confirm location" : "Move Marker"}
+            </button>
 
-        <button
-          onClick={() => {
-            setAddingMarker(!addingMarker);
-            //sets addingMarker to opposite boolean when clicked
-          }}
-        >
-          {addingMarker ? "Confirm location" : "Move Marker"}
-        </button>
+            <input type="text" id="msgInput" placeholder="Message"></input>
 
-        <button
-          onClick={() => {
-            getDataFromDB();
-          }}
-        >
-          Add your friends to map TEST
-        </button>
-
-        <input type="text" id="msgInput" placeholder="Message"></input>
-
-        <button
-          onClick={() => {
-            writeMsgToDb();
-          }}
-        >
-          write msg to db
-        </button>
+            <button
+              className="btn map-btn"
+              onClick={() => {
+                writeMsgToDb();
+              }}
+            >
+              <i class="zmdi zmdi-comment"></i>
+            </button>
+          </div>
+        </div>
       </Fragment>
     );
   };
