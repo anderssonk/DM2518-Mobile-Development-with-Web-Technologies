@@ -3,5 +3,5 @@ firebase.config.js
 /build
 !firebase.json
 package-lock.json
-
+apiConfig.js
 **/*Config.js*

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Page, List, Button, Tabbar, Tab } from "react-onsenui"; // Only import the necessary components
+import { Page } from "react-onsenui"; // Only import the necessary components
 // import * as Ons from 'react-onsenui'; // Import everything and use it as 'Ons.Page', 'Ons.Button'
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
@@ -30,7 +30,6 @@ function Friends({ user, firebaseSetup, logout }) {
     queryRef(friendValue);
   };
 
-  let friendbajs = [];
   let userNamesRef = firebaseSetup.db.collection("users");
   function queryRef(person) {
     userNamesRef
@@ -46,14 +45,6 @@ function Friends({ user, firebaseSetup, logout }) {
             window.confirm("Do you want to add this person to your friendlist?")
           ) {
             let newFriend = doc.data().name;
-            // friendbajs.push(...friends, newFriend);
-
-            // userRef.set(
-            //   {
-            //     friendList: friendbajs,
-            //   },
-            //   { merge: true }
-            // );
 
             userRef.update({
                 friendList: firebase.firestore.FieldValue.arrayUnion(

@@ -4,10 +4,8 @@ import { Page, List } from "react-onsenui"; // Only import the necessary compone
 
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
-import Friends from "./friends";
 
 function FriendsTest({ friends, user, firebaseSetup, getSearch, logout }) {
-  const [error, setError] = useState();
 
   return (
       <Page>
@@ -17,15 +15,6 @@ function FriendsTest({ friends, user, firebaseSetup, getSearch, logout }) {
 					<i class="zmdi zmdi-square-right"></i>
 				</button>
 			</div>
-			<div>
-				<h1>Friendlist</h1>
-				{/* want to display for every item in the list  */}
-				{/* <button onClick={console.log("my list: ", myFriendList)}>Get my list</button> */}
-				{/* {getFriendList()} */}
-				{/* {console.log("my friend list ", myFriendList)} */}
-				{/* {getFriendList() ? console.log("my list: ", myList) : console.log("No list", myList) && myList.map(item => <li>{item}</li>)} */}
-			</div>
-
 			{/* form to search for friends and optionally add to friendlist */}
 			<form onSubmit={(e) => getSearch(e)}>
 				<input
@@ -38,10 +27,7 @@ function FriendsTest({ friends, user, firebaseSetup, getSearch, logout }) {
 					<i class="zmdi zmdi-account-add"></i>
 				</button>
 			</form>
-      <ons-search-input id="input_id" type="text" placeholder="Search for a friend!"/>
-        <ons-button onClick={(e) => getSearch(e)}>
-          Search
-        </ons-button>
+      
         <List>
         <ons-list-header>My Friends</ons-list-header>
         {friends.map((i) => (
@@ -53,27 +39,3 @@ function FriendsTest({ friends, user, firebaseSetup, getSearch, logout }) {
 }
 
 export default FriendsTest;
-
-// function getFriendList() {
-//   userRef
-//     .get()
-//     .then((doc) => {
-//       if (!doc.exists) {
-//         console.log("No such document!");
-//       }
-//       if (doc.data().friendList) {
-//         doc.data().friendList.map((item) => friendList.push(item));
-//         console.log("friendList", friendList);
-//         //friendList = Object.values(friendList);
-//         friendList.map((i) => console.log("map", i));
-//         returnValue = friendList.map((i) => <div>{i}</div>);
-//         console.log("returnValue i funkt", returnValue);
-//         //setFriends(friendList);
-//         return;
-//       }
-//       setFriends(friendList);
-//     })
-//     .catch((err) => {
-//       console.log("Error getting document", err);
-//     });
-// }
