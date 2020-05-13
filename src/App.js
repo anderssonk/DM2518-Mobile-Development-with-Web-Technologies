@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { Page, Button, Tabbar, Tab } from "react-onsenui"; // Only import the necessary components
 // import * as Ons from 'react-onsenui'; // Import everything and use it as 'Ons.Page', 'Ons.Button'
+import "./App.css";
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
-import "./App.css";
-import "./typography.css";
 
 import withFirebaseAuth from "react-with-firebase-auth";
 import * as firebaseSetup from "./firebase.setup";
 
 import Friends from "../src/components/friends/friends";
-// import Status from "../src/components/status/status";
+import Status from "../src/components/status/status";
 import Map from "./components/map/map";
 import GMap from "./components/map/googlemaps2";
 import Login from "../src/components/login/login";
@@ -40,19 +39,19 @@ function App({ signInWithGoogle, signOut, user }) {
                   ),
                   tab: <Tab label="Map" icon="md-map" />,
                 },
-                // {
-                // 	content: (
-                // 		<Status
-                // 			title="Status"
-                // 			active={activeIndex === 1}
-                // 			tabbar={tabbar}
-                // 			logout={signOut}
-                // 			firebaseSetup={firebaseSetup}
-                // 			user={user}
-                // 		/>
-                // 	),
-                // 	tab: <Tab label="Status" icon="md-local-bar" />,
-                // },
+                {
+                  content: (
+                    <Status
+                      title="Status"
+                      active={activeIndex === 1}
+                      tabbar={tabbar}
+                      logout={signOut}
+                      firebaseSetup={firebaseSetup}
+                      user={user}
+                    />
+                  ),
+                  tab: <Tab label="Status" icon="md-local-bar" />,
+                },
                 {
                   content: (
                     <Friends
