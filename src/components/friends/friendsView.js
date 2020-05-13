@@ -106,7 +106,12 @@ function FriendsView({ user, firebaseSetup }) {
 
 			{/* form to search for friends and optionally add to friendlist */}
 			<form onSubmit={(e) => getSearch(e)}>
-				<input id="input_id" className="input-field" type="text" />
+				<input
+					id="input_id"
+					className="input-field"
+					type="text"
+					placeholder="Enter friend's name"
+				/>
 				<button type="submit" className="btn search-btn">
 					<i class="zmdi zmdi-account-add"></i>
 				</button>

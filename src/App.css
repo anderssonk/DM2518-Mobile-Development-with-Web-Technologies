@@ -7,36 +7,35 @@
 }
 
 .page__content {
-	background-color: #000000 !important;
-	background-image: linear-gradient(
-		to right,
-		#e0eafc 0%,
-		#cfdef3 51%,
-		#e0eafc 100%
-	) !important;
+	background: #a7dbdf !important;
 	background-size: cover;
 }
 
 .tabbar {
 	height: 4rem;
 	border-top: #000 !important;
-	background-image: linear-gradient(
+	background: #eb3349 !important;
+	/* background-image: linear-gradient(
 		to right,
 		#eb3349 0%,
 		#f45c43 51%,
 		#eb3349 100%
-	);
+	); */
 	background-size: cover;
 }
 
 .tabbar__button {
 	height: 4rem;
-	color: #fff;
-	font-family: "Balsamiq Sans", cursive !important;
+	color: #f0aba0;
+	background: #d62e41 !important;
 }
 
 :checked + .tabbar__button {
-	color: #b3c4db !important;
+	color: #fff !important;
+	background: #eb3349 !important;
+	border: none;
+	/* box-shadow: 0 9px 0px 0px transparent, 0 -9px 0px 0px transparent,
+		13px 0 15px -2px #a824335b, -13px 0 15px -2px #a824335b; */
 }
 
 .tabbar__icon {
@@ -57,22 +56,52 @@ form {
 	margin: 0.5rem !important;
 }
 
-.input-field {
-	height: 25px !important;
-	width: 50vw;
+input {
+	border: none;
+	border-radius: 0.1rem;
+	height: 1.2rem;
 	padding: 5px !important;
-	margin: auto 5px;
-	font-size: 13px !important;
+}
+
+.input-field {
+	font-size: 24px;
+	width: 50vw;
+}
+
+.list {
+	margin-top: 3rem;
+	background: transparent;
+}
+
+.list-item:nth-child(even) {
+	background-color: transparent !important;
+}
+.list-item:nth-child(odd) {
+	background: #9fd1d4 !important;
 }
 
 .btn {
 	margin: auto 5px;
-	background-color: #9eafc7 !important;
 	background-color: transparent;
 	border: none !important;
-	border-radius: 0.1rem !important;
 }
 
 .search-btn {
+	vertical-align: middle;
+	font-size: 28px !important;
+	line-height: 28px;
+}
+
+.map-btn {
+	font-size: 16px;
+	height: 1.5rem;
+	border-radius: 0.1rem;
+}
+
+.login-btn {
 	font-size: 22px !important;
+}
+
+.zmdi-pin {
+	color: #eb3349 !important;
 }

@@ -307,6 +307,7 @@ const GoogleMaps = ({ user }) => {
 					)}
 				</GoogleMap>
 				<button
+					className="btn map-btn"
 					onClick={() => {
 						yourPosition();
 
@@ -317,16 +318,17 @@ const GoogleMaps = ({ user }) => {
 				</button>
 
 				<button
+					className="btn map-btn"
 					onClick={() => {
 						setAddingMarker(!addingMarker);
 						//sets addingMarker to opposite boolean when clicked
 					}}
 				>
-					<i class="zmdi zmdi-arrows"></i>{" "}
 					{addingMarker ? "Confirm location" : "Move Marker"}
 				</button>
 
 				<button
+					className="btn map-btn"
 					onClick={() => {
 						getDataFromDB();
 					}}
@@ -337,6 +339,7 @@ const GoogleMaps = ({ user }) => {
 				<input type="text" id="msgInput" placeholder="Message"></input>
 
 				<button
+					className="btn map-btn"
 					onClick={() => {
 						writeMsgToDb();
 					}}
