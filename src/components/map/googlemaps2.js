@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect, useRef } from "react";
 import {
   useLoadScript,
   GoogleMap,
@@ -17,7 +17,9 @@ const GoogleMaps = ({ user }) => {
     googleMapsApiKey: "AIzaSyC2yBzA3XpDwN9ZRcpwxGwcFfw1xH0SGxQ",
   });
 
+  const refArray = useRef([]);
   const [friendsArray, setFriendsArray] = useState([]); //array used for retrieving data about friends from firestore
+  console.log("friends array state:", friendsArray);
 
   //GoogleMap
   const [mapRef, setMapRef] = useState(null); //A reference to the map instance (used for API map specific function like (getCenter() etc..))
@@ -28,11 +30,11 @@ const GoogleMaps = ({ user }) => {
   const [markerMap, setMarkerMap] = useState({}); // all marker objects from friends.
   const [yourMarkerMap, setYourMarkerMap] = useState({}); //used for referencing your own marker.
 
-  console.log("yourMarkerMap", yourMarkerMap);
+  // console.log("yourMarkerMap", yourMarkerMap);
   //---for setting positions and editing
   const [addingMarker, setAddingMarker] = useState(false); //boolean, is true when marker is in progress of being added, otherwise false.
   const [markerPosition, setMarkerPosition] = useState(); //the markers position, is set when user drags or clicks the map when addingMarker is true.
-  console.log("markerPosition", markerPosition);
+  //console.log("markerPosition", markerPosition);
 
   //InfoWindow
   const [selectedLocation, setSelectedLocation] = useState(null); //used for displaying info for InfoWindow
@@ -43,10 +45,13 @@ const GoogleMaps = ({ user }) => {
 
   //Your location
   const [yourLocation, setYourLocation] = useState(); //used for setting your local position
-  console.log("yourLocation", yourLocation);
+  //console.log("yourLocation", yourLocation);
 
   //Hard coded locations
   var kth_location = { lat: 59.347008, lng: 18.072181 };
+  useEffect(() => {
+    getDataFromDB(friendsArray);
+  }, [refArray]);
 
   const yourPosition = () => {
     //Function that ask permission for user location, and sets state yourLocation to that position.
@@ -120,31 +125,80 @@ const GoogleMaps = ({ user }) => {
     );
   };
 
-  const getFriendsData = (data) => {
-    setFriendsArray((prevArray) => [...prevArray, data]);
-  };
-
   function getDataFromDB() {
-    //get friend info from friendlist in Firestore DB
+    console.log("getDataBase f() Start");
     userRef.get().then((doc) => {
       doc.data().friendList.forEach((friend) => {
         firebaseSetup.db
           .collection("users")
           .where("name", "==", friend)
-          .get()
-          .then((snapshot) =>
-            snapshot.forEach((result) => {
-              // console.log("res.data().location", friend, result.data());
-              getFriendsData({
-                id: friend,
-                position: result.data().location,
-                message: result.data().message,
-              });
-            })
-          );
+          .onSnapshot((snapshot) => {
+            let changes = snapshot.docChanges(); //adds a listener to the firestore db
+            // var addArray = [];
+
+            changes.forEach((change) => {
+              if (change.type === "added") {
+                console.log("1. FriendsArray", friendsArray);
+                console.log("2. Added: ", change.doc.data());
+                var addObject = {};
+                addObject.id = change.doc.data().name;
+                addObject.position = change.doc.data().location;
+                addObject.message = change.doc.data().message;
+
+                // addArray.push(addObject);
+                refArray.current.push(addObject);
+                console.log("1.ADDED FRIENDSARRAY", friendsArray);
+              }
+              if (change.type === "removed") {
+                console.log("Removed: ", change.doc.data());
+              }
+
+              if (change.type === "modified") {
+                console.log("MODIFIED");
+                console.log("refArray.current", refArray.current);
+
+                var findIndex = refArray.current.findIndex(
+                  (friend) => friend.id === change.doc.data().name
+                );
+                // console.log(
+                //   "findIndex of:",
+                //   change.doc.data().name,
+                //   "  :  ",
+                //   findIndex
+                // );
+
+                var updArray = refArray.current;
+
+                console.log("updArray before", updArray);
+                var addObject = {};
+                addObject.id = change.doc.data().name;
+                addObject.position = change.doc.data().location;
+                addObject.message = change.doc.data().message;
+
+                refArray.current[findIndex] = addObject;
+                updArray[findIndex] = addObject;
+
+                console.log("updArray after", updArray);
+
+                setFriendsArray(updArray);
+                console.log("friendsarrayLAST", friendsArray);
+              }
+            });
+
+            console.log("refArray.current", refArray.current);
+
+            // setFriendsArray((prevState) => [...prevState, ...refArray.current]);
+            setFriendsArray([...refArray.current]);
+
+            // if (addArray.length > 0) {
+            // }
+          });
       });
     });
+    console.log("getDataFromDB END");
   }
+
+  // getDataFromDB();
 
   const loadHandler = (map) => {
     // Store a reference to the google map instance in state
@@ -152,6 +206,7 @@ const GoogleMaps = ({ user }) => {
   };
 
   const friendMarkerLoadHandler = (marker, place) => {
+    console.log("place", place);
     //  Create a mapping of our friends places(locations) to actual Marker objects
     return setMarkerMap((prevState) => {
       return { ...prevState, [place.id]: marker };
@@ -349,3 +404,123 @@ const GoogleMaps = ({ user }) => {
   return isLoaded ? renderMap() : null;
 };
 export default GoogleMaps;
+
+//get friend info from friendlist in Firestore DB real-time
+// userRef.onSnapshot((userSnap) => {
+//   //IF SOME DATA CHANGED ON USER IN DB
+
+//   if (userSnap.data().friendList.length !== friendsArray.length) {
+//     //NEW ADDED FRIEND SCENARIO
+//     var moreFriendsArray = []; //array to be merged with friendsArray
+
+//     //TODO not specific enough but works for now (example, length can be same but maybe not consist the same names?)
+//     //handle when friend is added to friendlist => add to friendArray so marker can be updated!
+//     console.log(
+//       "Database friendList differs in length from friendsArray length"
+//     );
+//     console.log("There has been a change in the database?");
+
+//     userSnap.data().friendList.forEach((friendFind) => {
+//       firebaseSetup.db
+//         .collection("users")
+//         .where("name", "==", friendFind) //a query that gets your friends in database and retrieves their data.
+//         .get()
+//         .then((doc) => {
+//           doc.forEach((friend) => {
+//             console.log("friend", friend.data());
+
+//             function contains(arr, id) {
+//               //returns true or false depending if id contains in array or not
+//               var contains = arr.filter((obj) => obj.id === id).length >= 1;
+//               return contains;
+//             }
+
+//             if (!contains(friendsArray, friend.data().name)) {
+//               console.log("addToMoreFriendsArray");
+//               var addObject = {};
+//               addObject.id = friend.data().name;
+//               addObject.position = friend.data().location;
+//               addObject.message = friend.data().message;
+//               moreFriendsArray.push(addObject);
+//               console.log("morefriendsarray:", moreFriendsArray);
+//             }
+//           });
+//           setFriendsArray((prevState) => [
+//             ...prevState,
+//             ...moreFriendsArray,
+//           ]);
+//           console.log("friendsArray 123123123", friendsArray);
+//         });
+//     });
+
+//     console.log("friendsArray 123123123___>>", friendsArray);
+//   } else {
+//   }
+// });
+
+//         .collection("users")
+//         .where("name", "==", friend)
+//         .onSnapshot((snapshot) => {
+// });
+
+// else {
+//   console.log("Same length should not be updated");
+// }
+// console.log("ddddata", userSnap.data());
+
+// console.log("userSnap", userSnap.data().friendList);
+
+//     .data().
+//     friendList.
+
+//     forEach((friend) => {
+//       firebaseSetup.db
+//         .collection("users")
+//         .where("name", "==", friend)
+//         .onSnapshot((snapshot) => {
+//           let changes = snapshot.docChanges(); //adds a listener to the firestore db
+//           var addArray = [];
+
+//         changes.forEach((change) => {
+//           if (change.type === "added") {
+//             console.log("1.FriendsArray", friendsArray);
+//             console.log("Added: ", change.doc.data());
+//             var addObject = {};
+//             addObject.id = change.doc.data().name;
+//             addObject.position = change.doc.data().location;
+//             addObject.message = change.doc.data().message;
+
+//             addArray.push(addObject);
+
+//             // console.log("1.ADDED FRIENDSARRAY", friendsArray);
+//           }
+//           if (change.type === "removed") {
+//             console.log("Removed: ", change.doc.data());
+//           }
+//           if (change.type === "modified") {
+//             console.log("Modified: ", change.doc.data());
+
+//             // var findIndex = friendsArray.findIndex(
+//             //   (friend) => friend.id === change.doc.data().id
+//             // );
+
+//             // setTheArray(prevState => [...prevState, {change.doc.data().id: change.doc.data()}]);
+
+//             // var changedArray =  Object.assign(friendsArray, change.doc.data()
+//             //if findIndex =-1 means no duplicate id
+
+//             // if (findIndex !== -1) {
+//             //   var noDoubleIdArray = friendsArray.filter(
+//             //     (friends) => friends.id !== change.doc.data().id
+//             //   );
+//             //   noDoubleIdArray.push(change.doc.data());
+//             //   return (addArray = noDoubleIdArray);
+//             // }
+//           }
+//           console.log("friendsArrayINSIDE", friendsArray);
+//         });
+//         setFriendsArray((prevState) => [...prevState, ...addArray]);
+//       });
+//   });
+// });
+// }
