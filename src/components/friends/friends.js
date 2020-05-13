@@ -61,8 +61,6 @@ function Friends({ user, firebaseSetup, logout }) {
 
   return (
     <Page>
-      {/* <FriendsView user={user} firebaseSetup={firebaseSetup} /> */}
-      
       <FriendsView
         friends={friends}
         user={user}
