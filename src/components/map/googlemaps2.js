@@ -1,9 +1,9 @@
 import React, { useState, Fragment } from "react";
 import {
-  useLoadScript,
-  GoogleMap,
-  Marker,
-  InfoWindow,
+	useLoadScript,
+	GoogleMap,
+	Marker,
+	InfoWindow,
 } from "@react-google-maps/api";
 import customStyle from "./customStyles";
 import * as firebaseSetup from "../../firebase.setup";
