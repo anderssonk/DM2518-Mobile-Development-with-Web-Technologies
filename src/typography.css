@@ -43,3 +43,13 @@ h1 {
 .search-btn {
 	color: #111 !important;
 }
+
+.btn-text-bajs {
+	font-size: 16px;
+}
+
+.confirm {
+	color: #eb3349 !important;
+	font-weight: 600;
+	font-size: 14px;
+}
