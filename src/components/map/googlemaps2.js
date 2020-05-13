@@ -334,9 +334,10 @@ const GoogleMaps = ({ user }) => {
               }}
             >
               <div className="infoWindow">
-                <br />
                 <span className="infoWindowName">
-                  {selectedLocation.id ? selectedLocation.id : "My position"}
+                  <h1>
+                    {selectedLocation.id ? selectedLocation.id : "My position"}
+                  </h1>
                 </span>
                 <br />
 

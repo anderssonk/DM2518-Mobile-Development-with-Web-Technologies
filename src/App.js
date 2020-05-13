@@ -18,7 +18,7 @@ import Login from "../src/components/login/login";
 function App({ signInWithGoogle, signOut, user }) {
 	const [index, setIndex] = useState(0);
 	const [logedIn, setLogedin] = useState(true);
-
+  
 	return (
 		<div className="App">
 			<Page>
