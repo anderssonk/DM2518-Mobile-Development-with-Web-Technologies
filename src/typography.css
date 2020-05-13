@@ -1,13 +1,14 @@
 .App,
 .page,
 .list,
-.tabbar__label,
 h1,
 h2,
 h3,
+.tabbar_label,
 button,
 input {
-	font-family: "Balsamiq Sans", cursive !important;
+	font-family: -apple-system, "Helvetica Neue", "Helvetica", "Arial",
+		"Lucida Grande", sans-serif !important;
 }
 
 .tabbar__icon {
@@ -24,4 +25,21 @@ h1 {
 
 .input-field {
 	font-size: 1rem !important;
+}
+
+.subtle {
+	color: #a7b4b4;
+}
+
+.pulse {
+	color: #f1faee !important;
+}
+
+.drink-btn {
+	color: #eee;
+	font-size: 50px;
+}
+
+.search-btn {
+	color: #111 !important;
 }

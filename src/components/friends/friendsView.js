@@ -5,7 +5,7 @@ import { Page, List } from "react-onsenui"; // Only import the necessary compone
 import "onsenui/css/onsenui.css";
 import "onsenui/css/onsen-css-components.css";
 
-function FriendsView({ user, firebaseSetup }) {
+function FriendsView({ logout, user, firebaseSetup }) {
 	let userRef = firebaseSetup.db.collection("users").doc(user.uid);
 
 	// search for users
@@ -94,7 +94,12 @@ function FriendsView({ user, firebaseSetup }) {
 
 	return (
 		<Page>
-			<div>Logged in as {user.displayName}</div>
+			<div className="logged-in-as">
+				Logged in as {user.displayName}
+				<button onClick={logout} className="btn logout-btn">
+					<i class="zmdi zmdi-square-right"></i>
+				</button>
+			</div>
 			<div>
 				<h1>Friendlist</h1>
 				{/* want to display for every item in the list  */}
