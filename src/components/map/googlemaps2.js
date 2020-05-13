@@ -265,7 +265,7 @@ const GoogleMaps = ({ user }) => {
           center={mapRef ? mapRef.getCenter() : kth_location}
           zoom={zoom}
           mapContainerStyle={{
-            height: "70vh",
+            height: "75vh",
             width: "100%",
           }}
           options={{
@@ -321,18 +321,6 @@ const GoogleMaps = ({ user }) => {
             />
           )}
 
-          {/* {infoOpen && selectedPlace && (
-            <InfoWindow
-              anchor={markerMap[selectedPlace.id]}
-              onCloseClick={() => setInfoOpen(false)}
-            >
-              <div>
-                <h3>{selectedPlace.id}</h3>
-                <div>This is your info window content</div>
-              </div>
-            </InfoWindow>
-          )} */}
-
           {infoOpen && selectedLocation && (
             //to update info on marker
             <InfoWindow
@@ -361,42 +349,46 @@ const GoogleMaps = ({ user }) => {
             </InfoWindow>
           )}
         </GoogleMap>
-        <button
-          onClick={() => {
-            yourPosition();
+        <div className="map-buttons">
+          <button
+            id="drink-btn"
+            className="btn drink-btn pulse"
+            onClick={() => {
+              yourPosition();
+              setMarkerPosition(yourLocation);
+              const element = document.getElementById("drink-btn");
+              element.classList.toggle("pulse");
+              element.classList.toggle("active-state");
+              element.childNodes[0].classList.toggle("fa-wine-glass");
+              element.childNodes[0].classList.toggle("fa-wine-glass-alt");
+            }}
+          >
+            <i class="fas fa-wine-glass"></i>
+          </button>
 
-            setMarkerPosition(yourLocation);
-          }}
-        >
-          My position
-        </button>
+          <div>
+            <button
+              className="btn"
+              onClick={() => {
+                setAddingMarker(!addingMarker);
+                //sets addingMarker to opposite boolean when clicked
+              }}
+            >
+              {addingMarker ? "Confirm location" : "Move Marker"}
+            </button>
 
-        <button
-          onClick={() => {
-            setAddingMarker(!addingMarker);
-            //sets addingMarker to opposite boolean when clicked
-          }}
-        >
-          {addingMarker ? "Confirm location" : "Move Marker"}
-        </button>
+            <input type="text" id="msgInput" placeholder="Message"></input>
 
-        <button
-          onClick={() => {
-            getDataFromDB();
-          }}
-        >
-          Add your friends to map TEST
-        </button>
-
-        <input type="text" id="msgInput" placeholder="Message"></input>
-
-        <button
-          onClick={() => {
-            writeMsgToDb();
-          }}
-        >
-          write msg to db
-        </button>
+            <button
+              className="btn map-btn"
+              onClick={() => {
+                writeMsgToDb();
+              }}
+            >
+              <i class="zmdi zmdi-comment"></i>
+            </button>
+          </div>
+        </div>
       </Fragment>
     );
   };
@@ -404,123 +396,3 @@ const GoogleMaps = ({ user }) => {
   return isLoaded ? renderMap() : null;
 };
 export default GoogleMaps;
-
-//get friend info from friendlist in Firestore DB real-time
-// userRef.onSnapshot((userSnap) => {
-//   //IF SOME DATA CHANGED ON USER IN DB
-
-//   if (userSnap.data().friendList.length !== friendsArray.length) {
-//     //NEW ADDED FRIEND SCENARIO
-//     var moreFriendsArray = []; //array to be merged with friendsArray
-
-//     //TODO not specific enough but works for now (example, length can be same but maybe not consist the same names?)
-//     //handle when friend is added to friendlist => add to friendArray so marker can be updated!
-//     console.log(
-//       "Database friendList differs in length from friendsArray length"
-//     );
-//     console.log("There has been a change in the database?");
-
-//     userSnap.data().friendList.forEach((friendFind) => {
-//       firebaseSetup.db
-//         .collection("users")
-//         .where("name", "==", friendFind) //a query that gets your friends in database and retrieves their data.
-//         .get()
-//         .then((doc) => {
-//           doc.forEach((friend) => {
-//             console.log("friend", friend.data());
-
-//             function contains(arr, id) {
-//               //returns true or false depending if id contains in array or not
-//               var contains = arr.filter((obj) => obj.id === id).length >= 1;
-//               return contains;
-//             }
-
-//             if (!contains(friendsArray, friend.data().name)) {
-//               console.log("addToMoreFriendsArray");
-//               var addObject = {};
-//               addObject.id = friend.data().name;
-//               addObject.position = friend.data().location;
-//               addObject.message = friend.data().message;
-//               moreFriendsArray.push(addObject);
-//               console.log("morefriendsarray:", moreFriendsArray);
-//             }
-//           });
-//           setFriendsArray((prevState) => [
-//             ...prevState,
-//             ...moreFriendsArray,
-//           ]);
-//           console.log("friendsArray 123123123", friendsArray);
-//         });
-//     });
-
-//     console.log("friendsArray 123123123___>>", friendsArray);
-//   } else {
-//   }
-// });
-
-//         .collection("users")
-//         .where("name", "==", friend)
-//         .onSnapshot((snapshot) => {
-// });
-
-// else {
-//   console.log("Same length should not be updated");
-// }
-// console.log("ddddata", userSnap.data());
-
-// console.log("userSnap", userSnap.data().friendList);
-
-//     .data().
-//     friendList.
-
-//     forEach((friend) => {
-//       firebaseSetup.db
-//         .collection("users")
-//         .where("name", "==", friend)
-//         .onSnapshot((snapshot) => {
-//           let changes = snapshot.docChanges(); //adds a listener to the firestore db
-//           var addArray = [];
-
-//         changes.forEach((change) => {
-//           if (change.type === "added") {
-//             console.log("1.FriendsArray", friendsArray);
-//             console.log("Added: ", change.doc.data());
-//             var addObject = {};
-//             addObject.id = change.doc.data().name;
-//             addObject.position = change.doc.data().location;
-//             addObject.message = change.doc.data().message;
-
-//             addArray.push(addObject);
-
-//             // console.log("1.ADDED FRIENDSARRAY", friendsArray);
-//           }
-//           if (change.type === "removed") {
-//             console.log("Removed: ", change.doc.data());
-//           }
-//           if (change.type === "modified") {
-//             console.log("Modified: ", change.doc.data());
-
-//             // var findIndex = friendsArray.findIndex(
-//             //   (friend) => friend.id === change.doc.data().id
-//             // );
-
-//             // setTheArray(prevState => [...prevState, {change.doc.data().id: change.doc.data()}]);
-
-//             // var changedArray =  Object.assign(friendsArray, change.doc.data()
-//             //if findIndex =-1 means no duplicate id
-
-//             // if (findIndex !== -1) {
-//             //   var noDoubleIdArray = friendsArray.filter(
-//             //     (friends) => friends.id !== change.doc.data().id
-//             //   );
-//             //   noDoubleIdArray.push(change.doc.data());
-//             //   return (addArray = noDoubleIdArray);
-//             // }
-//           }
-//           console.log("friendsArrayINSIDE", friendsArray);
-//         });
-//         setFriendsArray((prevState) => [...prevState, ...addArray]);
-//       });
-//   });
-// });
-// }

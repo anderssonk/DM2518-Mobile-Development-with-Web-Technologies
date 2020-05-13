@@ -5,3 +5,198 @@
 .App-link {
 	color: #61dafb;
 }
+
+.page__content {
+	background: #ece9e5 !important;
+	background-size: cover;
+}
+
+.tabbar {
+	height: 4rem;
+	border-top: #111 !important;
+	background: #111 !important;
+	background-size: cover;
+}
+
+.tabbar__button {
+	height: 4rem;
+	color: #666;
+	background: #222 !important;
+}
+
+:checked + .tabbar__button {
+	color: #fff !important;
+	background: #333 !important;
+	border: none;
+}
+
+.tabbar__icon {
+	font-size: 28px;
+	line-height: 28px;
+	height: 30px;
+}
+
+.tabbar__icon + .tabbar__label {
+	font-size: 13px !important;
+	line-height: 1;
+	margin: 0;
+	font-weight: 400;
+}
+
+form {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 2.5rem !important;
+	margin: 0.5rem !important;
+}
+
+input {
+	border: none;
+	border-radius: 0.1rem;
+	height: 1.2rem;
+	width: 50vw;
+	padding: 5px !important;
+}
+
+.input-field {
+	font-size: 24px;
+	margin-right: 0.3rem;
+}
+
+.list {
+	margin-top: 3rem;
+	background: transparent;
+}
+
+.list-item:nth-child(even) {
+	background-color: transparent !important;
+}
+.list-item:nth-child(odd) {
+	background: #e6e2df !important;
+}
+
+.map-buttons {
+	position: absolute;
+	bottom: 3vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: transparent;
+}
+
+.btn {
+	margin: auto 5px;
+	background-color: transparent;
+	border: none !important;
+}
+
+.search-btn {
+	background-color: #a8dadc !important;
+	border-bottom: 5px solid #457b9d !important;
+	border-radius: 50%;
+	height: 2.5rem;
+	width: 2.5rem;
+}
+
+.search-btn,
+.logout-btn {
+	vertical-align: middle;
+	font-size: 22px !important;
+	margin: 2px;
+}
+
+.map-btn {
+	background-color: #333 !important;
+	border-bottom: 3px solid #222 !important;
+	padding: 6px;
+	margin: 5px;
+	color: #fff;
+	font-size: 16px;
+	height: 2rem;
+	border-radius: 0.1rem;
+	background: white;
+}
+
+.drink-btn {
+	/* position: absolute;
+	top: 0px; */
+	height: 4.5rem;
+	width: 4.4rem;
+	border-radius: 50%;
+	background-color: #eb3349 !important;
+	border-bottom: 5px solid #c2283a !important;
+	padding: 6px 16px;
+	margin: 5px;
+}
+
+.drink-btn img {
+	height: 100%;
+}
+
+.logged-in-as {
+	margin: 0.5rem;
+}
+
+.login-btn {
+	font-size: 25px !important;
+	color: #f1faee !important;
+	padding: 5px 30px;
+	margin: 5px;
+	background-color: #eb3349 !important;
+	border-bottom: 5px solid #c2283a !important;
+	border-radius: 0.4rem;
+}
+
+/* .zmdi-pin {
+	color: #fff !important;
+} */
+
+.login-img {
+	width: 80vw;
+}
+
+.login-page {
+	display: flex;
+	height: 100%;
+	background-color: #ece9e5;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.login-page__section {
+	margin: 5px;
+}
+
+/* .active-state {
+	background-color: #eee;
+} */
+
+/* button pulse */
+
+.pulse {
+	background-color: #a8dadc !important;
+	border-bottom: 5px solid #457b9d !important;
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+	transform: scale(1);
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
