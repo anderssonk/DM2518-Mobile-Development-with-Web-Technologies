@@ -1,15 +1,16 @@
 import React, { useState, Fragment, useEffect, useRef } from "react";
 import {
-	useLoadScript,
-	GoogleMap,
-	Marker,
-	InfoWindow,
+  useLoadScript,
+  GoogleMap,
+  Marker,
+  InfoWindow,
 } from "@react-google-maps/api";
 import customStyle from "./customStyles";
 import * as firebaseSetup from "../../firebase.setup";
 import { googleMapsApiKey } from "../../apiConfig.js";
 
 const GoogleMaps = ({ user }) => {
+
 	let userRef = firebaseSetup.db.collection("users").doc(user.uid); //reference to users file in firestore
 
 	// Load the Google maps scripts
@@ -399,5 +400,6 @@ const GoogleMaps = ({ user }) => {
 	};
 
 	return isLoaded ? renderMap() : null;
+
 };
 export default GoogleMaps;
