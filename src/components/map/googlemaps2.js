@@ -367,7 +367,6 @@ const GoogleMaps = ({ user }) => {
 					>
 						<i class="fas fa-wine-glass"></i>
 					</button>
-
 					<div className="map-buttons__bajs">
 						<input type="text" id="msgInput" placeholder="Message"></input>
 
